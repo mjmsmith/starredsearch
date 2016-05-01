@@ -1,0 +1,50 @@
+{{>head}}
+
+<body>
+  <div class="container">
+    <div class="row">
+      {{>heading}}
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <h4 id="status"></h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-offset-4 col-xs-4 text-center">
+        <div class="progress">
+          <div id="progress" class="progress-bar progress-bar-success" style="width:0" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      loadStatus();
+    });
+
+    function loadStatus() {
+      $.getJSON("/load/status")
+       .done(function(json) {
+          var percent = (json.totalCount == 0) ? 0 : Math.round(json.fetchedCount / json.totalCount * 100);
+
+          $("#progress").css("width", (percent + "%"));
+
+          $("#status").html(json.status);
+
+          if (json.nextUrl) {
+            window.location = json.nextUrl;
+          }
+          else {
+            setTimeout(loadStatus, 2000);
+          }
+        })
+       .fail(function() {
+          setTimeout(loadStatus, 2000);
+        });
+    }
+  </script>
+</body>

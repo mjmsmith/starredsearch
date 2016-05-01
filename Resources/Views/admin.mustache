@@ -1,0 +1,29 @@
+{{>head}}
+
+<body>
+  <div class="container">
+    <div class="row">
+      {{>heading}}
+    </div>
+
+    <div class="row">
+      <div class="col-md-offset-1 col-md-10">
+        <table class="table">
+          {{#users}}
+            <tr>
+              <td>{{timeStamp}}</td>
+            </tr>
+            <tr>
+              <table class="table">
+                {{#repos}}
+                  <tr>
+                    <td>{{name}}</td>
+                  </tr>
+                {{/repos}}
+              </table>
+            </tr>
+          {{/users}}
+        </table>
+    </div>
+  </div>
+</body>
