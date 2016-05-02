@@ -14,10 +14,11 @@
 
     <div class="row">
       <div class="col-md-offset-4 col-md-4">
-        <form class="form-inline text-center">
+        <form id="search" class="form-inline text-center">
           <div class="form-group">
             <input type="text" id="query" class="form-control" name="query" placeholder="Text" value="{{query}}"
                    autocapitalize="off" autocorrect="off">
+            <input id="order" type="hidden" name="order" value="{{order}}">
             <button type="submit" class="btn btn-success form-control">Search</button>
           </div>
         </form>
@@ -29,11 +30,11 @@
         <table class="table {{^repos}}hidden{{/repos}}">
           <thead>
             <tr class="text-muted">
-              <th class="text-right">owner</th>
+              <th class="text-right"><a href="#" onclick="sort('owner')">owner</a></th>
               <th></th>
-              <th>repository</th>
-              <th class="text-right">matches</th>
-              <th class="text-right">starred</th>
+              <th><a href="#" onclick="sort('name')">repository</a></th>
+              <th class="text-right"><a href="#" onclick="sort('count')">matches</a></th>
+              <th class="text-right"><a href="#" onclick="sort('starred')">starred</a></th>
             </tr>
           </thead>
           <tbody>
@@ -70,5 +71,10 @@
       input.focus();
       setTimeout(function() { input.selectionStart = input.selectionEnd; }, 1);
     });
+
+    function sort(order) {
+      $("#order").val(order);
+      $("#search").submit();
+    }
   </script>
 </body>

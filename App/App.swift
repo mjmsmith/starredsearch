@@ -143,6 +143,7 @@ class App {
                              context: [
                                         "totalCount": user.repos.count,
                                         "query": query,
+                                        "order": sortOrder.rawValue,
                                         "repos": dicts,
                                         "status": status
                                       ])
