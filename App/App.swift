@@ -29,8 +29,6 @@ class App {
 #endif
   }
   
-  // MARK: Private
-  
   private func setupRoutes(server: Application) {
     server.get("/") { [unowned self] request in
       // Redirect if we already have a user.

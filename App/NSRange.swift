@@ -1,4 +1,4 @@
- import Foundation
+import Foundation
  
 extension NSRange {
   func asStringRange(in string: String) -> Range<String.Index> {

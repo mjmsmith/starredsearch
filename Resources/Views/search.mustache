@@ -64,11 +64,10 @@
 
   <script>
     $(document).ready(function() {
-      $("input#query").each(function() {
-        var input = this;
+      var input = $("#query").get(0);
 
-        input.focus();
-        setTimeout(function() { input.selectionStart = input.selectionEnd; }, 1);
+      input.focus();
+      setTimeout(function() { input.selectionStart = input.selectionEnd; }, 1);
       });
     });
   </script>
