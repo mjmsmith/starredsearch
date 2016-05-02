@@ -5,18 +5,32 @@ import VaporZewoMustache
 
 private typealias RepoQueryResults = (repo: Repo, count: Int, htmls: [String])
 
+private func countIsOrderedBefore(left: RepoQueryResults, _ right: RepoQueryResults) -> Bool {
+  return left.count != right.count ? (left.count < right.count) : repoNameIsOrderedBefore(left, right)
+}
+
+private func starredAtIsOrderedBefore(left: RepoQueryResults, _ right: RepoQueryResults) -> Bool {
+  let result = left.repo.starredAt.compare(right.repo.starredAt)
+  
+  return result != .orderedSame ? (result == .orderedAscending) : repoNameIsOrderedBefore(left, right)
+}
+
+private func repoNameIsOrderedBefore(left: RepoQueryResults, _ right: RepoQueryResults) -> Bool {
+  let leftName = left.repo.name.lowercased()
+  let rightName = right.repo.name.lowercased()
+
+  return leftName != rightName ? (leftName < rightName) : ownerNameIsOrderedBefore(left, right)
+}
+
+private func ownerNameIsOrderedBefore(left: RepoQueryResults, _ right: RepoQueryResults) -> Bool {
+  let leftName = left.repo.ownerName.lowercased()
+  let rightName = right.repo.ownerName.lowercased()
+  
+  return leftName != rightName ? (leftName < rightName) : (left.repo.id < right.repo.id)
+}
+
 private func isOrderedBefore(left: RepoQueryResults, right: RepoQueryResults) -> Bool {
-  if left.repo.name.lowercased() == right.repo.name.lowercased() {
-    if left.repo.ownerName.lowercased() == right.repo.ownerName.lowercased() {
-      return left.repo.id < right.repo.id
-    }
-    else {
-      return left.repo.ownerName.lowercased() < right.repo.ownerName.lowercased()
-    }
-  }
-  else {
-    return left.repo.name.lowercased() < right.repo.name.lowercased()
-  }
+  return countIsOrderedBefore(left, right)
 }
 
 private let PurgeInterval = NSTimeInterval(60*60)
