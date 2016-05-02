@@ -7,7 +7,7 @@ class Repo {
   let ownerName: String
   let starredAt: NSDate
   
-  private(set) var readme = [String]()
+  private var readme = [String]()
   
   private static let title1Regex = try! NSRegularExpression(pattern: "^#+ +", options: .anchorsMatchLines)
   private static let title2Regex = try! NSRegularExpression(pattern: "^=+$", options: .anchorsMatchLines)
