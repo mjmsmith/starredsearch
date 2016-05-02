@@ -94,7 +94,7 @@ class App {
       
       return Json(dict)
     }
-    
+
     server.get("search") { [unowned self] request in
       guard let user = self.userForRequest(request) else {
         return Response(redirect: "/")
@@ -120,28 +120,22 @@ class App {
       var dicts = [[String:Any]]()
 
       if query.characters.count >= MinQueryLength {
-        dicts = user.repos.flatMap { repo in
-          let repoResults: (count: Int, htmls: [String]) =
-            repo.linesMatching(query:query)
-              .map { line in self.results(forQuery: query, inLine: line) }
-              .reduce((0, [String]())) { total, current in (total.count + current.count, total.htmls + [current.html]) }
-          
-          if repoResults.count > 0 {
+        dicts =
+          user.repos
+          .map { repo in self.queryResults(for: query, in: repo) }
+          .filter { results in results.count > 0 }
+          .map { results in
             return [
-                     "repoId": repo.id,
-                     "repoName": repo.name,
-                     "repoUrl": repo.url?.absoluteString ?? "",
-                     "ownerId": repo.ownerId,
-                     "ownerName": repo.ownerName,
-                     "starredAt": self.shortDateFormatter.string(from: repo.starredAt),
-                     "count" : repoResults.count,
-                     "lines": repoResults.htmls
+                     "repoId": results.repo.id,
+                     "repoName": results.repo.name,
+                     "repoUrl": results.repo.url?.absoluteString ?? "",
+                     "ownerId": results.repo.ownerId,
+                     "ownerName": results.repo.ownerName,
+                     "starredAt": self.shortDateFormatter.string(from: results.repo.starredAt),
+                     "count" : results.count,
+                     "lines": results.htmls
                    ]
           }
-          else {
-            return nil
-          }
-        }
       }
 
       let status: String = {
@@ -163,7 +157,7 @@ class App {
                                         "status": status
                                       ])
     }
-    
+
     server.get("admin") { [unowned self] request in
       var users: [String:User]!
       
@@ -189,27 +183,36 @@ class App {
                                                                        "heading": "Includes/heading.mustache"
                                                                      ]))
   }
-  
-  func results(forQuery query: String, inLine line: String) -> (count: Int, html: String) {
-    let ranges = line.ranges(of: query, options:.caseInsensitiveSearch)
-    var currentIndex = line.startIndex
-    var substrings = [String]()
-    
-    for range in ranges {
-      if (currentIndex != range.startIndex) {
-        substrings.append(escapeHTML(line.substring(with: currentIndex..<range.startIndex)))
+
+  private func queryResults(for query: String, in repo: Repo) -> (repo: Repo, count: Int, htmls: [String]) {
+    let lineResults: [(count: Int, html: String)] =
+      repo
+      .linesMatching(query: query)
+      .map { line in
+        let ranges = line.ranges(of: query, options:.caseInsensitiveSearch)
+        var currentIndex = line.startIndex
+        var substrings = [String]()
+        
+        for range in ranges {
+         if (currentIndex != range.startIndex) {
+            substrings.append(escapeHTML(line.substring(with: currentIndex..<range.startIndex)))
+         }
+        
+         substrings.append("<mark>\(escapeHTML(line.substring(with: range)))</mark>")
+        
+         currentIndex = range.endIndex
+        }
+        
+        if (currentIndex != line.endIndex) {
+          substrings.append(escapeHTML(line.substring(with: currentIndex..<line.endIndex)))
+        }
+                
+        return (count: ranges.count, html: substrings.joined(separator: ""))
       }
-      
-      substrings.append("<mark>\(escapeHTML(line.substring(with: range)))</mark>")
-      
-      currentIndex = range.endIndex
-    }
     
-    if (currentIndex != line.endIndex) {
-      substrings.append(escapeHTML(line.substring(with: currentIndex..<line.endIndex)))
+    return lineResults.reduce((repo: repo, count: 0, htmls: [String]())) {
+      accum, result in (accum.repo, accum.count + result.count, accum.htmls + [result.html])
     }
-    
-    return (count: ranges.count, html: substrings.joined(separator: ""))
   }
   
   private func userForSessionIdentifier(sessionIdentifier: String) -> User? {
