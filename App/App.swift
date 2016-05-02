@@ -3,6 +3,22 @@ import Mustache
 import Vapor
 import VaporZewoMustache
 
+private typealias RepoQueryResults = (repo: Repo, count: Int, htmls: [String])
+
+private func isOrderedBefore(left: RepoQueryResults, right: RepoQueryResults) -> Bool {
+  if left.repo.name.lowercased() == right.repo.name.lowercased() {
+    if left.repo.ownerName.lowercased() == right.repo.ownerName.lowercased() {
+      return left.repo.id < right.repo.id
+    }
+    else {
+      return left.repo.ownerName.lowercased() < right.repo.ownerName.lowercased()
+    }
+  }
+  else {
+    return left.repo.name.lowercased() < right.repo.name.lowercased()
+  }
+}
+
 private let PurgeInterval = NSTimeInterval(60*60)
 private let UserTimeoutInterval = NSTimeInterval(60*60*24)
 private let MinQueryLength = 3
@@ -100,21 +116,6 @@ class App {
         return Response(redirect: "/")
       }
       
-      let isOrderedBefore: ([String:Any], [String:Any]) -> Bool = { left, right in
-        let leftRepoName = left["repoName"] as! String
-        let rightRepoName = right["repoName"] as! String
-        
-        if leftRepoName == rightRepoName {
-          let leftOwnerName = left["ownerName"] as! String
-          let rightOwnerName = right["ownerName"] as! String
-
-          return leftOwnerName.lowercased() < rightOwnerName.lowercased()
-        }
-        else {
-          return leftRepoName.lowercased() < rightRepoName.lowercased()
-        }
-      }
-
       let _query = request.data["query"]?.string ?? "", // TODO: why does this == "query" when the query string field value is empty?
           query = _query == "query" ? "" : _query
       var dicts = [[String:Any]]()
@@ -124,6 +125,7 @@ class App {
           user.repos
           .map { repo in self.queryResults(for: query, in: repo) }
           .filter { results in results.count > 0 }
+          .sorted(isOrderedBefore: isOrderedBefore)
           .map { results in
             return [
                      "repoId": results.repo.id,
@@ -153,7 +155,7 @@ class App {
                              context: [
                                         "totalCount": user.repos.count,
                                         "query": query,
-                                        "repos": dicts.sorted(isOrderedBefore: isOrderedBefore),
+                                        "repos": dicts,
                                         "status": status
                                       ])
     }
@@ -184,7 +186,7 @@ class App {
                                                                      ]))
   }
 
-  private func queryResults(for query: String, in repo: Repo) -> (repo: Repo, count: Int, htmls: [String]) {
+  private func queryResults(for query: String, in repo: Repo) -> RepoQueryResults {
     let lineResults: [(count: Int, html: String)] =
       repo
       .linesMatching(query: query)

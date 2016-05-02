@@ -26,38 +26,36 @@
 
     <div class="row">
       <div class="col-md-offset-1 col-md-10">
-        {{#repos}}
-          <table class="table">
-            <thead>
-              <tr class="text-muted">
-                <th class="text-right">owner</th>
-                <th></th>
-                <th>repository</th>
-                <th class="text-right">matches</th>
-                <th class="text-right">starred</th>
+        <table class="table {{^repos}}hidden{{/repos}}">
+          <thead>
+            <tr class="text-muted">
+              <th class="text-right">owner</th>
+              <th></th>
+              <th>repository</th>
+              <th class="text-right">matches</th>
+              <th class="text-right">starred</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#repos}}
+              <tr>
+                <td class="text-right" style="white-space:nowrap">{{ownerName}}</td>
+                <td class="text-center" style="padding-left:0; padding-right:0">/</td>
+                <td style="white-space:nowrap; width:100%"><a href="{{repoUrl}}">{{repoName}}</a></td>
+                <td class="text-right"><span class="badge">{{count}}</span></td>
+                <td class="text-right" style="white-space:nowrap">{{starredAt}}</td>
               </tr>
-            </thead>
-            <tbody>
-              {{#repos}}
-                <tr>
-                  <td class="text-right" style="white-space:nowrap">{{ownerName}}</td>
-                  <td class="text-center" style="padding-left:0; padding-right:0">/</td>
-                  <td style="white-space:nowrap; width:100%"><a href="{{repoUrl}}">{{repoName}}</a></td>
-                  <td class="text-right"><span class="badge">{{count}}</span></td>
-                  <td class="text-right" style="white-space:nowrap">{{starredAt}}</td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="font-size:80%; border:none; padding-top:0"></td>
-                  <td colspan="3" style="font-size:80%; border:none; padding-top:0">
-                    {{#lines}}
-                      <div style="padding-bottom:5px; line-height:1.25">{{{.}}}</div>
-                    {{/lines}}
-                  </td>
-                </tr>
-              {{/repos}}
-            </tbody>
-          </table>
-        {{/repos}}
+              <tr>
+                <td colspan="2" style="font-size:80%; border:none; padding-top:0"></td>
+                <td colspan="3" style="font-size:80%; border:none; padding-top:0">
+                  {{#lines}}
+                    <div style="padding-bottom:5px; line-height:1.25">{{{.}}}</div>
+                  {{/lines}}
+                </td>
+              </tr>
+            {{/repos}}
+          </tbody>
+        </table>
         {{^repos}}
           <h5 class="text-center">{{status}}</h5>
         {{/repos}}
