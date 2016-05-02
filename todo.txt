@@ -1,4 +1,4 @@
-minimum # of chars in search
+help text on auth page
 
 admin page with password
 
@@ -9,7 +9,5 @@ sort by owner name, repo name, # matches, starred date
 limit length of each single result line
 
 add links to the bottom of the search page
-
-spinner after starting search
 
 fixed search form layout

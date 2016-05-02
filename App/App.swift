@@ -5,6 +5,7 @@ import VaporZewoMustache
 
 private let PurgeInterval = NSTimeInterval(60*60)
 private let UserTimeoutInterval = NSTimeInterval(60*60*24)
+private let MinQueryLength = 3
 
 class App {
   private let server = Application()
@@ -118,33 +119,48 @@ class App {
           query = _query == "query" ? "" : _query
       var dicts = [[String:Any]]()
 
-      if !query.isEmpty {
-        for repo in user.repos {
+      if query.characters.count >= MinQueryLength {
+        dicts = user.repos.flatMap { repo in
           let total: (count: Int, htmls: [String]) =
             repo.linesMatching(query:query)
               .map { line in self.results(forQuery: query, inLine: line) }
               .reduce((0, [String]())) { total, current in (total.count + current.count, total.htmls + [current.html]) }
           
           if total.count > 0 {
-            dicts.append([
-                           "repoId": repo.id,
-                           "repoName": repo.name,
-                           "repoUrl": repo.url?.absoluteString ?? "",
-                           "ownerId": repo.ownerId,
-                           "ownerName": repo.ownerName,
-                           "starredAt": self.shortDateFormatter.string(from: repo.starredAt),
-                           "count" : total.count,
-                           "lines": total.htmls
-                         ])
+            return [
+                     "repoId": repo.id,
+                     "repoName": repo.name,
+                     "repoUrl": repo.url?.absoluteString ?? "",
+                     "ownerId": repo.ownerId,
+                     "ownerName": repo.ownerName,
+                     "starredAt": self.shortDateFormatter.string(from: repo.starredAt),
+                     "count" : total.count,
+                     "lines": total.htmls
+                   ]
+          }
+          else {
+            return nil
           }
         }
       }
-      
+
+      let status: String = {
+        switch (query.characters.count) {
+          case 0:
+            return ""
+          case 1..<MinQueryLength:
+            return "Please enter at least \(MinQueryLength) characters."
+          default:
+            return dicts.count == 0 ? "No results for “\(query)”." : ""
+        }
+      }()
+
       return try server.view("search.mustache",
                              context: [
                                         "totalCount": user.repos.count,
                                         "query": query,
-                                        "repos": dicts.sorted(isOrderedBefore: isOrderedBefore)
+                                        "repos": dicts.sorted(isOrderedBefore: isOrderedBefore),
+                                        "status": status
                                       ])
     }
     
