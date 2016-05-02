@@ -121,12 +121,12 @@ class App {
 
       if query.characters.count >= MinQueryLength {
         dicts = user.repos.flatMap { repo in
-          let total: (count: Int, htmls: [String]) =
+          let repoResults: (count: Int, htmls: [String]) =
             repo.linesMatching(query:query)
               .map { line in self.results(forQuery: query, inLine: line) }
               .reduce((0, [String]())) { total, current in (total.count + current.count, total.htmls + [current.html]) }
           
-          if total.count > 0 {
+          if repoResults.count > 0 {
             return [
                      "repoId": repo.id,
                      "repoName": repo.name,
@@ -134,8 +134,8 @@ class App {
                      "ownerId": repo.ownerId,
                      "ownerName": repo.ownerName,
                      "starredAt": self.shortDateFormatter.string(from: repo.starredAt),
-                     "count" : total.count,
-                     "lines": total.htmls
+                     "count" : repoResults.count,
+                     "lines": repoResults.htmls
                    ]
           }
           else {
