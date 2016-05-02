@@ -10,6 +10,7 @@
 		4D264EC11CC985D700C8B505 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D264EC01CC985D700C8B505 /* Repo.swift */; };
 		4D322EA61CCD1658003C6EE0 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D322EA51CCD1658003C6EE0 /* App.swift */; };
 		4D35EFD41CD11CA40068CE6D /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D35EFD31CD11CA40068CE6D /* NSDate.swift */; };
+		4D4E5D431CD7DAAC00E73079 /* RepoQueryResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4E5D421CD7DAAB00E73079 /* RepoQueryResults.swift */; };
 		4D6276F01CD44D750023D7DA /* NSRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6276EF1CD44D750023D7DA /* NSRange.swift */; };
 		4DB763671CCFE91D00DEC87F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB763661CCFE91D00DEC87F /* String.swift */; };
 		4DB9CA751CC6AB38007E9CBB /* libC7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_C7" /* libC7.dylib */; };
@@ -443,6 +444,7 @@
 		4D264EC01CC985D700C8B505 /* Repo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repo.swift; sourceTree = "<group>"; };
 		4D322EA51CCD1658003C6EE0 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		4D35EFD31CD11CA40068CE6D /* NSDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDate.swift; sourceTree = "<group>"; };
+		4D4E5D421CD7DAAB00E73079 /* RepoQueryResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoQueryResults.swift; sourceTree = "<group>"; };
 		4D6276EF1CD44D750023D7DA /* NSRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSRange.swift; sourceTree = "<group>"; };
 		4DB763661CCFE91D00DEC87F /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		4DB9CAF61CC6AC8E007E9CBB /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
@@ -962,6 +964,7 @@
 			children = (
 				__PBXFileRef_App/Models/User.swift /* User.swift */,
 				4D264EC01CC985D700C8B505 /* Repo.swift */,
+				4D4E5D421CD7DAAB00E73079 /* RepoQueryResults.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -2007,6 +2010,7 @@
 			buildActionMask = 0;
 			files = (
 				__src_cc_ref_App/main.swift /* main.swift in Sources */,
+				4D4E5D431CD7DAAC00E73079 /* RepoQueryResults.swift in Sources */,
 				4D6276F01CD44D750023D7DA /* NSRange.swift in Sources */,
 				4DB9CAFB1CC7FE1E007E9CBB /* NSURLSession.swift in Sources */,
 				4D264EC11CC985D700C8B505 /* Repo.swift in Sources */,
