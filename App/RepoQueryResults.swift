@@ -1,12 +1,28 @@
 import Foundation
 
 struct RepoQueryResults {
+  enum SortOrder: String {
+    case count
+    case starred
+    case name
+    case owner
+  }
+  
   let repo: Repo
   let count: Int
   let htmls: [String]
   
-  static func isOrderedBefore(left: RepoQueryResults, right: RepoQueryResults) -> Bool {
-    return self.countIsOrderedBefore(left, right)
+  static func sorted(results results: [RepoQueryResults], by sortOrder: SortOrder) -> [RepoQueryResults] {
+    switch sortOrder {
+      case .count:
+        return results.sorted(isOrderedBefore: self.countIsOrderedBefore).reversed()
+      case .starred:
+        return results.sorted(isOrderedBefore: self.starredAtIsOrderedBefore).reversed()
+      case .name:
+        return results.sorted(isOrderedBefore: self.repoNameIsOrderedBefore)
+      case .owner:
+        return results.sorted(isOrderedBefore: self.ownerNameIsOrderedBefore)
+    }
   }
 
   private static func countIsOrderedBefore(left: RepoQueryResults, _ right: RepoQueryResults) -> Bool {
@@ -32,5 +48,4 @@ struct RepoQueryResults {
     
     return leftName != rightName ? (leftName < rightName) : (left.repo.id < right.repo.id)
   }
-  
 }

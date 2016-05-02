@@ -102,26 +102,30 @@ class App {
       
       let _query = request.data["query"]?.string ?? "", // TODO: why does this == "query" when the query string field value is empty?
           query = _query == "query" ? "" : _query
-      var dicts = [[String:Any]]()
+      let sortOrder = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .name
+      let dicts: [[String:Any]]
 
       if query.characters.count >= MinQueryLength {
-        dicts =
+        let repoQueryResults =
           user.repos
           .map { repo in self.repoQueryResults(for: query, in: repo) }
           .filter { results in results.count > 0 }
-          .sorted(isOrderedBefore: RepoQueryResults.isOrderedBefore)
-          .map { results in
-            return [
-                     "repoId": results.repo.id,
-                     "repoName": results.repo.name,
-                     "repoUrl": results.repo.url?.absoluteString ?? "",
-                     "ownerId": results.repo.ownerId,
-                     "ownerName": results.repo.ownerName,
-                     "starredAt": self.shortDateFormatter.string(from: results.repo.starredAt),
-                     "count" : results.count,
-                     "lines": results.htmls
-                   ]
+        
+        dicts = RepoQueryResults.sorted(results: repoQueryResults, by: sortOrder).map { results in
+          return [
+                   "repoId": results.repo.id,
+                   "repoName": results.repo.name,
+                   "repoUrl": results.repo.url?.absoluteString ?? "",
+                   "ownerId": results.repo.ownerId,
+                   "ownerName": results.repo.ownerName,
+                   "starredAt": self.shortDateFormatter.string(from: results.repo.starredAt),
+                   "count" : results.count,
+                   "lines": results.htmls
+                 ]
           }
+      }
+      else {
+        dicts = []
       }
 
       let status: String = {
