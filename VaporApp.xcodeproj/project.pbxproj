@@ -447,7 +447,7 @@
 		4DB763661CCFE91D00DEC87F /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		4DB9CAF61CC6AC8E007E9CBB /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		4DB9CAF71CC6AD03007E9CBB /* Public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Public; sourceTree = "<group>"; };
-		4DB9CAF81CC72EC1007E9CBB /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
+		4DB9CAF81CC72EC1007E9CBB /* todo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		4DB9CAFA1CC7FE1E007E9CBB /* NSURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLSession.swift; sourceTree = "<group>"; };
 		4DE998E91CC93A3F00DBD389 /* NSURLComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLComponents.swift; sourceTree = "<group>"; };
 		__PBXFileRef_App/Models/User.swift /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -993,7 +993,7 @@
 		"___RootGroup_" = {
 			isa = PBXGroup;
 			children = (
-				4DB9CAF81CC72EC1007E9CBB /* todo.md */,
+				4DB9CAF81CC72EC1007E9CBB /* todo.txt */,
 				"_______Group_App" /* App */,
 				4DB9CAF71CC6AD03007E9CBB /* Public */,
 				4DB9CAF61CC6AC8E007E9CBB /* Resources */,
