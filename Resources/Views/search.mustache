@@ -30,11 +30,11 @@
         <table class="table {{^repos}}hidden{{/repos}}">
           <thead>
             <tr class="text-muted">
-              <th class="text-right"><a href="#" onclick="sort('owner')">owner</a></th>
+              <th class="text-right"><a href="#" id="owner" onclick="sort('owner')">owner</a></th>
               <th></th>
-              <th><a href="#" onclick="sort('name')">repository</a></th>
-              <th class="text-right"><a href="#" onclick="sort('count')">matches</a></th>
-              <th class="text-right"><a href="#" onclick="sort('starred')">starred</a></th>
+              <th class="text-left"><a href="#" id="name" onclick="sort('name')">repository</a></th>
+              <th class="text-right"><a href="#" id="count" onclick="sort('count')">matches</a></th>
+              <th class="text-right"><a href="#" id="starred" onclick="sort('starred')">starred</a></th>
             </tr>
           </thead>
           <tbody>
@@ -66,10 +66,12 @@
 
   <script>
     $(document).ready(function() {
-      var input = $("#query").get(0);
+      var input = $("input#query").get(0);
 
       input.focus();
       setTimeout(function() { input.selectionStart = input.selectionEnd; }, 1);
+
+      $("a#"+$("input#order").first().val()).removeAttr("href onclick").addClass("disabled");
     });
 
     function sort(order) {
