@@ -22,6 +22,19 @@ class Repo {
   let ownerName: String
   let starredAt: NSDate
   
+  private(set) var readme: [String]? {
+    get { var value: [String]?; dispatch_sync(self.readmeQueue, { value = self._readme }); return value! }
+    set { dispatch_barrier_sync(self.readmeQueue, { self._readme = newValue }) }
+  }
+  
+  var url: NSURL? {
+    get { return NSURL(string: "https://github.com/\(self.ownerName)/\(self.name)") }
+  }
+  
+  var readmeUrl: NSURL? {
+    get { return NSURL(string: "https://api.github.com/repos/\(self.ownerName)/\(self.name)/readme") }
+  }
+  
   private var _readme: [String]?
   private let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)
 
@@ -33,30 +46,6 @@ class Repo {
     self.starredAt = starredAt
   }
 
-  private(set) var readme: [String]? {
-    get {
-      var value: [String]?
-      dispatch_sync(self.readmeQueue, { value = self._readme })
-      return value!
-    }
-    
-    set {
-      dispatch_barrier_sync(self.readmeQueue, { self._readme = newValue })
-    }
-  }
-
-  var url: NSURL? {
-    get {
-      return NSURL(string: "https://github.com/\(self.ownerName)/\(self.name)")
-    }
-  }
-  
-  var readmeUrl: NSURL? {
-    get {
-      return NSURL(string: "https://api.github.com/repos/\(self.ownerName)/\(self.name)/readme")
-    }
-  }
-  
   func linesMatching(query query: String) -> [String] {
     return self.readme?.filter { $0.localizedCaseInsensitiveContains(query) } ?? []
   }

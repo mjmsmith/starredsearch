@@ -65,51 +65,23 @@ class User {
   private var _fetchedRepoCounts = (fetchedCount: 0, totalCount: 0)
   
   private(set) var timeStamp: NSDate {
-    get {
-      var value: NSDate?
-      dispatch_sync(self.timeStampQueue, { value = self._timeStamp })
-      return value!
-    }
-    
-    set {
-      dispatch_barrier_sync(self.timeStampQueue, { self._timeStamp = newValue })
-    }
+    get { var value: NSDate?; dispatch_sync(self.timeStampQueue, { value = self._timeStamp }); return value! }
+    set { dispatch_barrier_sync(self.timeStampQueue, { self._timeStamp = newValue }) }
   }
   
   private(set) var repos: [Repo] {
-    get {
-      var value: [Repo]?
-      dispatch_sync(self.reposQueue, { value = self._repos })
-      return value!
-    }
-    
-    set {
-      dispatch_barrier_sync(self.reposQueue, { self._repos = newValue })
-    }
+    get { var value: [Repo]?; dispatch_sync(self.reposQueue, { value = self._repos }); return value! }
+    set { dispatch_barrier_sync(self.reposQueue, { self._repos = newValue }) }
   }
   
   private(set) var reposState: ReposState {
-    get {
-      var value: ReposState?
-      dispatch_sync(self.reposStateQueue, { value = self._reposState })
-      return value!
-    }
-    
-    set {
-      dispatch_barrier_sync(self.reposStateQueue, { self._reposState = newValue })
-    }
+    get { var value: ReposState?; dispatch_sync(self.reposStateQueue, { value = self._reposState }); return value! }
+    set { dispatch_barrier_sync(self.reposStateQueue, { self._reposState = newValue }) }
   }
   
   private(set) var fetchedRepoCounts: (fetchedCount: Int, totalCount: Int) {
-    get {
-      var value: (fetchedCount: Int, totalCount: Int)?
-      dispatch_sync(self.fetchedRepoCountsQueue, { value = self._fetchedRepoCounts })
-      return value!
-    }
-    
-    set {
-      dispatch_barrier_sync(self.fetchedRepoCountsQueue, { self._fetchedRepoCounts = newValue })
-    }
+    get { var value: (fetchedCount: Int, totalCount: Int)?; dispatch_sync(self.fetchedRepoCountsQueue, { value = self._fetchedRepoCounts }); return value! }
+    set { dispatch_barrier_sync(self.fetchedRepoCountsQueue, { self._fetchedRepoCounts = newValue }) }
   }
   
   func initializeWithCode(code: String) {
