@@ -89,7 +89,7 @@ class App {
       }()
       
       if user.reposState == .fetched {
-        dict["nextUrl"] = "/search"
+        dict["nextUrl"] = request.session?["nextUrl"] ?? "/search"
       }
       
       return Json(dict)
@@ -97,6 +97,17 @@ class App {
 
     server.get("search") { [unowned self] request in
       guard let user = self.userForRequest(request) else {
+        var queryDict: [String: String] = [:]
+        
+        for queryItem in request.uri.query {
+          queryDict[queryItem.key] = queryItem.value
+        }
+
+        if let path = request.uri.path,
+               url = NSURLComponents.componentsWith(string: path, queryDict: queryDict)?.url {
+          request.session?["nextUrl"] = url.absoluteString
+        }
+        
         return Response(redirect: "/")
       }
       
