@@ -129,6 +129,7 @@ class App {
                    "repoUrl": results.repo.url?.absoluteString ?? "",
                    "ownerId": results.repo.ownerId,
                    "ownerName": results.repo.ownerName,
+                   "ownerUrl": results.repo.ownerUrl?.absoluteString ?? "",
                    "starredAt": self.shortDateFormatter.string(from: results.repo.starredAt),
                    "count" : results.count,
                    "lines": results.htmls

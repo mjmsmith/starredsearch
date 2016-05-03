@@ -31,6 +31,10 @@ class Repo {
     get { return NSURL(string: "https://github.com/\(self.ownerName)/\(self.name)") }
   }
   
+  var ownerUrl: NSURL? {
+    get { return NSURL(string: "https://github.com/\(self.ownerName)") }
+  }
+  
   var readmeUrl: NSURL? {
     get { return NSURL(string: "https://api.github.com/repos/\(self.ownerName)/\(self.name)/readme") }
   }

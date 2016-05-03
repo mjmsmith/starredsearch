@@ -40,9 +40,9 @@
           <tbody>
             {{#repos}}
               <tr>
-                <td class="text-right" style="white-space:nowrap">{{ownerName}}</td>
+                <td class="text-right" style="white-space:nowrap"><a href="{{ownerUrl}}">{{ownerName}}</a></td>
                 <td class="text-center" style="padding-left:0; padding-right:0">/</td>
-                <td style="white-space:nowrap; width:100%"><a href="{{repoUrl}}">{{repoName}}</a></td>
+                <td class="text-left" style="white-space:nowrap; width:100%"><a href="{{repoUrl}}">{{repoName}}</a></td>
                 <td class="text-right"><span class="badge">{{count}}</span></td>
                 <td class="text-right" style="white-space:nowrap">{{starredAt}}</td>
               </tr>
