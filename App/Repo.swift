@@ -7,7 +7,7 @@ class Repo {
   let ownerName: String
   let starredAt: NSDate
   
-  private var readme = [String]()
+  private var readme: [String]?
   
   private static let title1Regex = try! NSRegularExpression(pattern: "^#+ +", options: .anchorsMatchLines)
   private static let title2Regex = try! NSRegularExpression(pattern: "^=+$", options: .anchorsMatchLines)
@@ -45,7 +45,7 @@ class Repo {
   }
   
   func linesMatching(query query: String) -> [String] {
-    return self.readme.filter { $0.localizedCaseInsensitiveContains(query) }
+    return self.readme?.filter { $0.localizedCaseInsensitiveContains(query) } ?? []
   }
   
   func setReadme(withMarkdown markdown: String) {

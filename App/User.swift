@@ -8,8 +8,7 @@ import Vapor
 #endif
 
 class User {
-  private static let fetchQueue = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT)
-  private static let cachedRepos = NSMapTable(keyOptions: .strongMemory, valueOptions:  .weakMemory)
+  private static let cachedRepos = NSMapTable(keyOptions: .strongMemory, valueOptions: .weakMemory)
   private static let cachedReposQueue = dispatch_queue_create("cachedRepos", DISPATCH_QUEUE_CONCURRENT)
   
   private static func cachedRepo(id id: Int) -> Repo? {
@@ -21,6 +20,14 @@ class User {
   private static func cacheRepo(repo: Repo) {
     dispatch_barrier_sync(User.cachedReposQueue, { self.cachedRepos.setObject(repo, forKey: repo.id) })
   }
+  
+  private static let fetchQueue = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT)
+
+  private static let fetchOperationQueue: NSOperationQueue = {
+    let operationQueue = NSOperationQueue()
+    operationQueue.maxConcurrentOperationCount = 10
+    return operationQueue
+  }()
   
   enum ReposState {
     case notFetched
@@ -66,17 +73,17 @@ class User {
   
   private(set) var fetchedRepoCounts: (fetchedCount: Int, totalCount: Int) {
     get {
-      return _fetchedRepoCounts
+      var value: (fetchedCount: Int, totalCount: Int)?
+      dispatch_sync(self.fetchedRepoCountsQueue, { value = self._fetchedRepoCounts })
+      return value!
     }
     
     set {
-      _fetchedRepoCounts = newValue
+      dispatch_barrier_sync(self.fetchedRepoCountsQueue, { self._fetchedRepoCounts = newValue })
     }
   }
 
   private var oauthToken: String?
-
-  private let markdownQueue = dispatch_queue_create("markdown", DISPATCH_QUEUE_SERIAL)
 
   private let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)
   private var _timeStamp = NSDate()
@@ -111,22 +118,26 @@ class User {
   }
   
   private func exchangeCodeForAccessToken(code: String) -> String? {
+    var accessToken: String?
     let requestComponents = NSURLComponents.componentsWith(string: "https://github.com/login/oauth/access_token",
                                                            queryDict: [
                                                                         "client_id": GitHubClientID,
                                                                         "client_secret": GitHubClientSecret,
                                                                         "code": code
                                                                       ])!
-    let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!)
+    let operation = NSBlockOperation(block: {
+      let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!)
+      
+      if let queryData = data,
+             queryString = String(data: queryData, encoding: NSUTF8StringEncoding),
+             urlComponents = NSURLComponents(string: "?\(queryString)") {
+        accessToken = urlComponents.queryItems?.filter({ $0.name == "access_token" }).first?.value
+      }
+    })
     
-    guard let queryData = data,
-      queryString = String(data: queryData, encoding: NSUTF8StringEncoding),
-      urlComponents = NSURLComponents(string: "?\(queryString)")
-    else {
-      return nil
-    }
+    User.fetchOperationQueue.addOperations([operation], waitUntilFinished: true)
     
-    return urlComponents.queryItems?.filter({ $0.name == "access_token" }).first?.value
+    return accessToken
   }
 
   private func fetchStarredRepoDicts() -> [[String: Node]] {
@@ -146,22 +157,26 @@ class User {
                                                                           "page": String(page),
                                                                           "per_page": String(perPage)
                                                                         ])!
-      let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!,
-                                                                       headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.star+json"]))
-      
-      if let bytes = data?.arrayOfBytes(), json = try? Json(Data(bytes)), array = json.array {
-        dicts += array.flatMap { $0.object }
+      let operation = NSBlockOperation(block: {
+        let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!,
+                                                                     headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.star+json"]))
+        
+        if let bytes = data?.arrayOfBytes(), json = try? Json(Data(bytes)), array = json.array {
+          dicts += array.flatMap { $0.object }
 
-        if array.count < perPage || dicts.count >= MaxRepoCount {
-          perPage = 0
+          if array.count < perPage || dicts.count >= MaxRepoCount {
+            perPage = 0
+          }
+          else {
+            page += 1
+          }
         }
         else {
-          page += 1
+          perPage = 0
         }
-      }
-      else {
-        perPage = 0
-      }
+      })
+      
+      User.fetchOperationQueue.addOperations([operation], waitUntilFinished:true)
     } while perPage > 0
     
     return dicts
@@ -172,7 +187,8 @@ class User {
 
     self.fetchedRepoCounts = (fetchedCount: 0, totalCount: dicts.count)
     
-    var repos = [Repo]()
+    var cachedRepos = [Repo]()
+    var newRepos = [Repo]()
     
     for dict in dicts {
       if let repoDict = dict["repo"]?.object,
@@ -184,32 +200,34 @@ class User {
              starredAtStr = dict["starred_at"]?.string,
              starredAt = NSDate.date(fromIsoString: starredAtStr) {
         if let repo = User.cachedRepo(id: id) {
-          repos.append(repo)
+          cachedRepos.append(repo)
         }
         else {
-          let repo = Repo(id: id, name: name, ownerId: ownerId, ownerName: ownerName, starredAt: starredAt)
-
-          if let readmeUrl = repo.readmeUrl {
-            let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: readmeUrl,
-                                                                         headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.raw"]))
-            
-            if let stringData = data, string = String(data: stringData, encoding: NSUTF8StringEncoding) {
-              repos.append(repo)
-              
-              dispatch_async(self.markdownQueue, {
-                repo.setReadme(withMarkdown: string)
-              })
-            }
-          }
+          newRepos.append(Repo(id: id, name: name, ownerId: ownerId, ownerName: ownerName, starredAt: starredAt))
         }
-        
-        self.fetchedRepoCounts = (fetchedCount: repos.count, totalCount: dicts.count)
       }
     }
 
-    dispatch_sync(self.markdownQueue, {})
+    self.fetchedRepoCounts = (fetchedCount: cachedRepos.count, totalCount: dicts.count)
 
-    return repos
+    let operations = newRepos.map { repo in
+      return NSBlockOperation(block: {
+        if let readmeUrl = repo.readmeUrl {
+          let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: readmeUrl,
+                                                                       headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.raw"]))
+          
+          if let stringData = data, string = String(data: stringData, encoding: NSUTF8StringEncoding) {
+            repo.setReadme(withMarkdown: string)
+            self.fetchedRepoCounts = (fetchedCount: (self.fetchedRepoCounts.fetchedCount + 1),
+                                      totalCount: self.fetchedRepoCounts.totalCount)
+          }
+        }
+      })
+    }
+    
+    User.fetchOperationQueue.addOperations(operations, waitUntilFinished: true)
+
+    return cachedRepos + newRepos
   }
   
   private func authorizedRequestHeaders(headers: [String:String] = [:]) -> [String:String] {
