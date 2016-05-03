@@ -150,6 +150,13 @@ class App {
     }
 
     server.get("admin") { [unowned self] request in
+      guard let headerValue = request.headers["Authorization"].values.first where headerValue.starts(with: "Basic "),
+            let passwordData = NSData(base64EncodedString: headerValue.substring(from: headerValue.startIndex.advanced(by: 6))),
+                password = NSString(data: passwordData, encoding: NSUTF8StringEncoding) where password == ":\(AppAdminPassword)"
+      else {
+        return Response(status: .unauthorized, headers: ["WWW-Authenticate": "Basic"])
+      }
+
       var users: [String:User]!
       
       dispatch_sync(self.usersQueue, { users = self._usersBySessionIdentifier })

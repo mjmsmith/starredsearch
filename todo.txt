@@ -1,10 +1,8 @@
+save next url in session
+
 help text on auth page
 
-admin page with password
-
 test stripping, i.e. markdown links with embedded images
-
-sort by owner name, repo name, # matches, starred date
 
 limit length of each single result line
 
