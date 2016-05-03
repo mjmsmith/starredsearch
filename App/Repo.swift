@@ -1,14 +1,6 @@
 import Foundation
 
 class Repo {
-  let id: Int
-  let name: String
-  let ownerId: Int
-  let ownerName: String
-  let starredAt: NSDate
-  
-  private var readme: [String]?
-  
   private static let title1Regex = try! NSRegularExpression(pattern: "^#+ +", options: .anchorsMatchLines)
   private static let title2Regex = try! NSRegularExpression(pattern: "^=+$", options: .anchorsMatchLines)
   private static let codeBlockRegex = try! NSRegularExpression(pattern: "^```.*$", options: .anchorsMatchLines)
@@ -23,6 +15,15 @@ class Repo {
   private static let italic1Regex = try! NSRegularExpression(pattern: "_(.+?)_", options: [])
   private static let italic2Regex = try! NSRegularExpression(pattern: "\\*(.+?)\\*", options: [])
   private static let codeRegex = try! NSRegularExpression(pattern: "`(.*?)`", options: [])
+  
+  let id: Int
+  let name: String
+  let ownerId: Int
+  let ownerName: String
+  let starredAt: NSDate
+  
+  private var _readme: [String]?
+  private let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)
 
   init(id: Int, name: String, ownerId: Int, ownerName: String, starredAt: NSDate) {
     self.id = id
@@ -30,6 +31,18 @@ class Repo {
     self.ownerId = ownerId
     self.ownerName = ownerName
     self.starredAt = starredAt
+  }
+
+  private(set) var readme: [String]? {
+    get {
+      var value: [String]?
+      dispatch_sync(self.readmeQueue, { value = self._readme })
+      return value!
+    }
+    
+    set {
+      dispatch_barrier_sync(self.readmeQueue, { self._readme = newValue })
+    }
   }
 
   var url: NSURL? {

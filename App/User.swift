@@ -7,6 +7,9 @@ import Vapor
   private let MaxRepoCount = 1000
 #endif
 
+private let MaxConcurrentSlowFetchOperations = 20
+private let MaxConcurrentFastFetchOperations = 5
+
 class User {
   private static let cachedRepos = NSMapTable(keyOptions: .strongMemory, valueOptions: .weakMemory)
   private static let cachedReposQueue = dispatch_queue_create("cachedRepos", DISPATCH_QUEUE_CONCURRENT)
@@ -21,19 +24,45 @@ class User {
     dispatch_barrier_sync(User.cachedReposQueue, { self.cachedRepos.setObject(repo, forKey: repo.id) })
   }
   
-  private static let fetchQueue = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT)
+  private static let fetchQueue = dispatch_queue_create("fetch", DISPATCH_QUEUE_CONCURRENT)
 
-  private static let fetchOperationQueue: NSOperationQueue = {
+  private static let fastFetchOperationQueue: NSOperationQueue = {
     let operationQueue = NSOperationQueue()
-    operationQueue.maxConcurrentOperationCount = 10
+    
+    operationQueue.maxConcurrentOperationCount = MaxConcurrentFastFetchOperations
+    operationQueue.qualityOfService = .userInitiated
+    
     return operationQueue
   }()
   
+  private static let slowFetchOperationQueue: NSOperationQueue = {
+    let operationQueue = NSOperationQueue()
+
+    operationQueue.maxConcurrentOperationCount = MaxConcurrentSlowFetchOperations
+    operationQueue.qualityOfService = .utility
+    
+    return operationQueue
+  }()
+
   enum ReposState {
     case notFetched
     case fetching
     case fetched
   }
+  
+  private var oauthToken: String?
+
+  private let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)
+  private var _timeStamp = NSDate()
+  
+  private let reposQueue = dispatch_queue_create("repos", DISPATCH_QUEUE_CONCURRENT)
+  private var _repos = [Repo]()
+
+  private let reposStateQueue = dispatch_queue_create("reposState", DISPATCH_QUEUE_CONCURRENT)
+  private var _reposState = ReposState.notFetched
+
+  private let fetchedRepoCountsQueue = dispatch_queue_create("fetchedRepoCounts", DISPATCH_QUEUE_CONCURRENT)
+  private var _fetchedRepoCounts = (fetchedCount: 0, totalCount: 0)
   
   private(set) var timeStamp: NSDate {
     get {
@@ -46,7 +75,7 @@ class User {
       dispatch_barrier_sync(self.timeStampQueue, { self._timeStamp = newValue })
     }
   }
-
+  
   private(set) var repos: [Repo] {
     get {
       var value: [Repo]?
@@ -58,7 +87,7 @@ class User {
       dispatch_barrier_sync(self.reposQueue, { self._repos = newValue })
     }
   }
-
+  
   private(set) var reposState: ReposState {
     get {
       var value: ReposState?
@@ -82,20 +111,6 @@ class User {
       dispatch_barrier_sync(self.fetchedRepoCountsQueue, { self._fetchedRepoCounts = newValue })
     }
   }
-
-  private var oauthToken: String?
-
-  private let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)
-  private var _timeStamp = NSDate()
-  
-  private let reposQueue = dispatch_queue_create("repos", DISPATCH_QUEUE_CONCURRENT)
-  private var _repos = [Repo]()
-
-  private let reposStateQueue = dispatch_queue_create("reposState", DISPATCH_QUEUE_CONCURRENT)
-  private var _reposState = ReposState.notFetched
-
-  private let fetchedRepoCountsQueue = dispatch_queue_create("fetchedRepoCounts", DISPATCH_QUEUE_CONCURRENT)
-  private var _fetchedRepoCounts = (fetchedCount: 0, totalCount: 0)
   
   func initializeWithCode(code: String) {
     dispatch_async(User.fetchQueue, {
@@ -135,7 +150,7 @@ class User {
       }
     })
     
-    User.fetchOperationQueue.addOperations([operation], waitUntilFinished: true)
+    User.fastFetchOperationQueue.addOperations([operation], waitUntilFinished: true)
     
     return accessToken
   }
@@ -176,7 +191,7 @@ class User {
         }
       })
       
-      User.fetchOperationQueue.addOperations([operation], waitUntilFinished:true)
+      User.fastFetchOperationQueue.addOperations([operation], waitUntilFinished:true)
     } while perPage > 0
     
     return dicts
@@ -225,7 +240,7 @@ class User {
       })
     }
     
-    User.fetchOperationQueue.addOperations(operations, waitUntilFinished: true)
+    User.slowFetchOperationQueue.addOperations(operations, waitUntilFinished: true)
 
     return cachedRepos + newRepos
   }
