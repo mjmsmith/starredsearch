@@ -9,5 +9,3 @@ add links to the bottom of the search page
 fixed search form layout
 
 add logout option
-
-add link to ownername

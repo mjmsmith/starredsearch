@@ -21,7 +21,8 @@ class Repo {
   let ownerId: Int
   let ownerName: String
   let starredAt: NSDate
-  
+  let timeStamp = NSDate()
+
   private(set) var readme: [String]? {
     get { var value: [String]?; dispatch_sync(self.readmeQueue, { value = self._readme }); return value! }
     set { dispatch_barrier_sync(self.readmeQueue, { self._readme = newValue }) }

@@ -9,19 +9,30 @@ import Vapor
 
 private let MaxConcurrentSlowFetchOperations = 20
 private let MaxConcurrentFastFetchOperations = 5
+private let RepoTimeoutInterval = NSTimeInterval(60*60*24)
 
 class User {
-  private static let cachedRepos = NSMapTable(keyOptions: .strongMemory, valueOptions: .weakMemory)
-  private static let cachedReposQueue = dispatch_queue_create("cachedRepos", DISPATCH_QUEUE_CONCURRENT)
+  private static var reposById = [Int: Repo]()
+  private static let reposByIdQueue = dispatch_queue_create("reposById", DISPATCH_QUEUE_CONCURRENT)
   
   private static func cachedRepo(id id: Int) -> Repo? {
     var cachedRepo: Repo?
-    dispatch_sync(self.cachedReposQueue, { cachedRepo = self.cachedRepos.object(forKey: id) as? Repo})
+    dispatch_sync(self.reposByIdQueue, { cachedRepo = self.reposById[id] })
     return cachedRepo
   }
   
   private static func cacheRepo(repo: Repo) {
-    dispatch_barrier_sync(User.cachedReposQueue, { self.cachedRepos.setObject(repo, forKey: repo.id) })
+    dispatch_barrier_sync(self.reposByIdQueue, { self.reposById[repo.id] = repo })
+  }
+
+  static func purgeRepos() {
+    dispatch_barrier_sync(self.reposByIdQueue, {
+      let now = NSDate()
+      
+      self.reposById
+        .filter { _, repo in return now.timeInterval(since: repo.timeStamp) > RepoTimeoutInterval }
+        .forEach { id, _ in self.reposById.removeValue(forKey: id) }
+    })
   }
   
   private static let fetchQueue = dispatch_queue_create("fetch", DISPATCH_QUEUE_CONCURRENT)
