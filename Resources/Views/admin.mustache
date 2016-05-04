@@ -2,28 +2,64 @@
 
 <body>
   <div class="container">
+    {{>header}}
+
     <div class="row">
-      {{>heading}}
+      <div class="col-md-offset-1 col-md-10">
+        <h4 class="text-center">Users</h4>
+      </div>
     </div>
 
     <div class="row">
       <div class="col-md-offset-1 col-md-10">
         <table class="table">
-          {{#users}}
-            <tr>
-              <td>{{timeStamp}}</td>
+          <thead>
+            <tr class="text-muted">
+              <th>timestamp</th>
+              <th>repos</th>
             </tr>
-            <tr>
-              <table class="table">
-                {{#repos}}
-                  <tr>
-                    <td>{{name}}</td>
-                  </tr>
-                {{/repos}}
-              </table>
-            </tr>
-          {{/users}}
+          </thead>
+          <tbody>
+            {{#users}}
+              <tr style="font-size:80%">
+                <td style="white-space:nowrap">{{timeStamp}}</td>
+                <td style="width:100%">{{#repos}}{{.}} {{/repos}}</td>
+              </tr>
+            {{/users}}
+          </tbody>
         </table>
+      </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-offset-1 col-md-10">
+        <h4 class="text-center">Repos</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-offset-1 col-md-10">
+        <table class="table">
+          <thead>
+            <tr class="text-muted">
+              <th>timestamp</th>
+              <th class="text-right">id</th>
+              <th>name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#repos}}
+              <tr style="font-size:80%">
+                <td style="white-space:nowrap">{{timeStamp}}</td>
+                <td class="text-right">{{id}}</td>
+                <td style="white-space:nowrap; width:100%">{{name}}</td>
+              </tr>
+            {{/repos}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {{>footer}}
   </div>
 </body>

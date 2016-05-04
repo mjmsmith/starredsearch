@@ -12,7 +12,7 @@ class App {
   private let shortDateFormatter = NSDateFormatter()
   private var purgeTimeStamp = NSDate()
 
-  private var _usersBySessionIdentifier = [String:User]()
+  private var _usersBySessionIdentifier = [String: User]()
   private let usersQueue = dispatch_queue_create("usersQueue", DISPATCH_QUEUE_CONCURRENT)
   
   init() {
@@ -169,21 +169,27 @@ class App {
         return Response(status: .unauthorized, headers: ["WWW-Authenticate": "Basic"])
       }
 
-      var users: [String:User]!
+      var usersBySession = [String: User]()
       
-      dispatch_sync(self.usersQueue, { users = self._usersBySessionIdentifier })
+      dispatch_sync(self.usersQueue, { usersBySession = self._usersBySessionIdentifier })
 
-      let dicts: [[String:Any]] = Array(users.values).map { user in
+      let users = usersBySession.values.sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
+      let repos = users.reduce(Set<Repo>()) { set, user in set.union(user.repos) }.sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
+      let userDicts: [[String:Any]] = users.map { user in
         return [
                  "timeStamp": user.timeStamp.description,
-                 "repos": user.repos.map { repo in
-                            return ["name": repo.name]
-                          }
+                 "repos": user.repos.map { repo in return repo.id }
+               ]
+      }
+      let repoDicts: [[String:Any]] = repos.map { repo in
+        return [
+                 "id": repo.id,
+                 "name": repo.name,
+                 "timeStamp": repo.timeStamp.description
                ]
       }
       
-      
-      return try server.view("admin.mustache", context: ["users": dicts])
+      return try server.view("admin.mustache", context: ["users": userDicts, "repos": repoDicts])
     }
   }
   

@@ -84,3 +84,13 @@ class Repo {
     return text
   }
 }
+
+extension Repo: Hashable {
+  var hashValue: Int {
+    return self.id
+  }
+}
+
+func ==(left: Repo, right: Repo) -> Bool {
+  return left === right
+}
