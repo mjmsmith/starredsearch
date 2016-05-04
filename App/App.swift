@@ -97,9 +97,9 @@ class App {
 
     server.get("search") { [unowned self] request in
       guard let user = self.userForRequest(request) else {
-        var queryDict: [String: String] = [:]
+        var queryDict = [String: String]()
         
-        for queryItem in request.uri.query {
+        for queryItem in request.uri.query where !queryItem.key.starts(with: "/") { // TODO: why is the path included?
           queryDict[queryItem.key] = queryItem.value
         }
 
