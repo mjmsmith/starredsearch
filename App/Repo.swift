@@ -18,6 +18,8 @@ class Repo {
   private static let italic2Regex = try! NSRegularExpression(pattern: "\\*(.+?)\\*", options: [])
   private static let codeRegex = try! NSRegularExpression(pattern: "`(.*?)`", options: [])
   
+  private static let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)
+
   let id: Int
   let name: String
   let ownerId: Int
@@ -26,8 +28,8 @@ class Repo {
   let timeStamp = NSDate()
 
   private(set) var readme: [String]? {
-    get { var value: [String]?; dispatch_sync(self.readmeQueue, { value = self._readme }); return value! }
-    set { dispatch_barrier_sync(self.readmeQueue, { self._readme = newValue }) }
+    get { var value: [String]?; dispatch_sync(Repo.readmeQueue, { value = self._readme }); return value! }
+    set { dispatch_barrier_sync(Repo.readmeQueue, { self._readme = newValue }) }
   }
   
   var url: NSURL? {
@@ -43,7 +45,6 @@ class Repo {
   }
   
   private var _readme: [String]?
-  private let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)
 
   init(id: Int, name: String, ownerId: Int, ownerName: String, starredAt: NSDate) {
     self.id = id
