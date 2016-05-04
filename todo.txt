@@ -1,3 +1,7 @@
+default sort by matches?
+
+admin page contents
+
 help text on auth page
 
 test stripping, i.e. markdown links with embedded images
