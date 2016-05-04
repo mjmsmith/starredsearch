@@ -4,8 +4,6 @@ test stripping, i.e. markdown links with embedded images
 
 limit length of each single result line
 
-add links to the bottom of the search page
-
 fixed search form layout
 
 add logout option
