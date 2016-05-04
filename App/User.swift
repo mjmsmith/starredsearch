@@ -2,7 +2,7 @@ import Foundation
 import Vapor
 
 #if DEBUG
-  private let MaxRepoCount = 100
+  private let MaxRepoCount = 50
 #else
   private let MaxRepoCount = 1000
 #endif

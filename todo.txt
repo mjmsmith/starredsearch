@@ -1,7 +1,3 @@
-admin page contents
-
-help text on auth page
-
 test stripping, i.e. markdown links with embedded images
 
 limit length of each single result line

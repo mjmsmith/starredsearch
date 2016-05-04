@@ -4,6 +4,14 @@
   <div class="container">
     {{>header}}
 
+    <div class="row" style="padding:48px 0 16px 0">
+      <div class="col-xs-offset-3 col-xs-6">
+        <h4 class="text-center">Authorize GitHub access.</h4>
+        <h6>Starred Search requests no permissions beyond read access to public data.</h6>
+        <h6>Authorization is used only to identify your account and avoid rate-limited anonymous GitHub API requests.</h6>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-xs-12 text-center">
         <button class="btn btn-success" onclick="window.location='{{url}}'">Authorize</button>
