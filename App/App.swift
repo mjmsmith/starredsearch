@@ -169,24 +169,36 @@ class App {
         return Response(status: .unauthorized, headers: ["WWW-Authenticate": "Basic"])
       }
 
-      var usersBySession = [String: User]()
+      var users = [User]()
+      var usersByRepo = [Repo: [User]]()
       
-      dispatch_sync(self.usersQueue, { usersBySession = self._usersBySessionIdentifier })
+      dispatch_sync(self.usersQueue, { users = Array(self._usersBySessionIdentifier.values) })
 
-      let users = usersBySession.values.sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
-      let repos = users.reduce(Set<Repo>()) { set, user in set.union(user.repos) }.sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
-      let userDicts: [[String:Any]] = users.map { user in
-        return [
-                 "timeStamp": user.timeStamp.description,
-                 "repos": user.repos.map { repo in return repo.id }
-               ]
+      for user in users {
+        for repo in user.repos {
+          usersByRepo[repo] = (usersByRepo[repo] ?? []) + [user]
+        }
       }
-      let repoDicts: [[String:Any]] = repos.map { repo in
-        return [
-                 "id": repo.id,
-                 "name": repo.name,
-                 "timeStamp": repo.timeStamp.description
-               ]
+
+      let userDicts: [[String:Any]] =
+        users
+          .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
+          .map { user in
+            return [
+                     "timeStamp": user.timeStamp.description,
+                     "username": user.username
+                   ]
+      }
+      let repoDicts: [[String:Any]] =
+        usersByRepo.keys
+          .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
+          .map { repo in
+            return [
+                     "timeStamp": repo.timeStamp.description,
+                     "id": repo.id,
+                     "name": repo.name,
+                     "users": usersByRepo[repo]!.map { user in user.username }
+                   ]
       }
       
       return try server.view("admin.mustache", context: ["users": userDicts, "repos": repoDicts])

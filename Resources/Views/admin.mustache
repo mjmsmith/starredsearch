@@ -16,14 +16,14 @@
           <thead>
             <tr class="text-muted">
               <th>timestamp</th>
-              <th>repos</th>
+              <th>username</th>
             </tr>
           </thead>
           <tbody>
             {{#users}}
               <tr style="font-size:80%">
                 <td style="white-space:nowrap">{{timeStamp}}</td>
-                <td style="width:100%">{{#repos}}{{.}} {{/repos}}</td>
+                <td style="width:100%">{{username}}</td>
               </tr>
             {{/users}}
           </tbody>
@@ -45,6 +45,7 @@
               <th>timestamp</th>
               <th class="text-right">id</th>
               <th>name</th>
+              <th>users</th>
             </tr>
           </thead>
           <tbody>
@@ -52,7 +53,8 @@
               <tr style="font-size:80%">
                 <td style="white-space:nowrap">{{timeStamp}}</td>
                 <td class="text-right">{{id}}</td>
-                <td style="white-space:nowrap; width:100%">{{name}}</td>
+                <td>{{name}}</td>
+                <td style="width:100%">{{#users}}{{.}}{{/users}} </td>
               </tr>
             {{/repos}}
           </tbody>

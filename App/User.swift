@@ -63,6 +63,9 @@ class User {
   
   private var accessToken: String?
 
+  private let usernameQueue = dispatch_queue_create("username", DISPATCH_QUEUE_CONCURRENT)
+  private var _username = ""
+
   private let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)
   private var _timeStamp = NSDate()
   
@@ -74,6 +77,11 @@ class User {
 
   private let fetchedRepoCountsQueue = dispatch_queue_create("fetchedRepoCounts", DISPATCH_QUEUE_CONCURRENT)
   private var _fetchedRepoCounts = (fetchedCount: 0, totalCount: 0)
+  
+  private(set) var username: String {
+    get { var value: String?; dispatch_sync(self.usernameQueue, { value = self._username }); return value! }
+    set { dispatch_barrier_sync(self.usernameQueue, { self._username = newValue }) }
+  }
   
   private(set) var timeStamp: NSDate {
     get { var value: NSDate?; dispatch_sync(self.timeStampQueue, { value = self._timeStamp }); return value! }
@@ -99,6 +107,9 @@ class User {
     dispatch_async(User.fetchQueue, {
       if let accessToken = self.exchangeCodeForAccessToken(code) {
         self.accessToken = accessToken
+        
+        self.username = self.fetchUsername() ?? "(unknown)"
+        
         self.reposState = .fetching
         self.repos = self.fetchStarredRepos(self.fetchStarredRepoDicts())
         
@@ -138,6 +149,22 @@ class User {
     return accessToken
   }
 
+  private func fetchUsername() -> String? {
+    var username: String?
+    let operation = NSBlockOperation(block: {
+      let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: NSURL(string: "https://api.github.com/user")!,
+                                                                   headers: self.authorizedRequestHeaders())
+      
+      if let bytes = data?.arrayOfBytes(), json = try? Json(Data(bytes)), dict = json.object {
+        username = dict["login"]?.string
+      }
+    })
+    
+    User.fastFetchOperationQueue.addOperations([operation], waitUntilFinished: true)
+    
+    return username
+  }
+  
   private func fetchStarredRepoDicts() -> [[String: Node]] {
     guard let _ = self.accessToken else { return [] }
     
