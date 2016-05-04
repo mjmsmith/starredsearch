@@ -1,5 +1,3 @@
-default sort by matches?
-
 admin page contents
 
 help text on auth page

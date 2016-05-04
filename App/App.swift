@@ -113,7 +113,7 @@ class App {
       
       let _query = request.data["query"]?.string ?? "", // TODO: why does this == "query" when the query string field value is empty?
           query = _query == "query" ? "" : _query
-      let sortOrder = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .name
+      let sortOrder = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .count
       let dicts: [[String:Any]]
 
       if query.characters.count >= MinQueryLength {
