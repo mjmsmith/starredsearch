@@ -61,7 +61,7 @@ class User {
     case fetched
   }
   
-  private var oauthToken: String?
+  private var accessToken: String?
 
   private let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)
   private var _timeStamp = NSDate()
@@ -97,8 +97,8 @@ class User {
   
   func initializeWithCode(code: String) {
     dispatch_async(User.fetchQueue, {
-      if let oauthToken = self.exchangeCodeForAccessToken(code) {
-        self.oauthToken = oauthToken
+      if let accessToken = self.exchangeCodeForAccessToken(code) {
+        self.accessToken = accessToken
         self.reposState = .fetching
         self.repos = self.fetchStarredRepos(self.fetchStarredRepoDicts())
         
@@ -139,7 +139,7 @@ class User {
   }
 
   private func fetchStarredRepoDicts() -> [[String: Node]] {
-    guard let _ = self.oauthToken else { return [] }
+    guard let _ = self.accessToken else { return [] }
     
     var dicts = [[String: Node]]()
     var page = 1
@@ -181,7 +181,7 @@ class User {
   }
   
   private func fetchStarredRepos(dicts: [[String: Node]]) -> [Repo] {
-    guard let _ = self.oauthToken else { return [] }
+    guard let _ = self.accessToken else { return [] }
 
     self.fetchedRepoCounts = (fetchedCount: 0, totalCount: dicts.count)
     
@@ -229,11 +229,11 @@ class User {
   }
   
   private func authorizedRequestHeaders(headers: [String:String] = [:]) -> [String:String] {
-    guard let oauthToken = self.oauthToken else { return headers }
+    guard let accessToken = self.accessToken else { return headers }
     
     var authorizedHeaders = headers
     
-    authorizedHeaders["Authorization"] = "token \(oauthToken)"
+    authorizedHeaders["Authorization"] = "token \(accessToken)"
     
     return authorizedHeaders
   }
