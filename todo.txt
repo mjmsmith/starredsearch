@@ -1,6 +1,1 @@
-fixed search form layout
-
 add logout option
-
-small screen layout
-- check colors on admin view
