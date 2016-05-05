@@ -4,5 +4,3 @@ add logout option
 
 small screen layout
 - check colors on admin view
-- vertical space in form input vs button - make form nowrap?
-- md vs xs columns?
