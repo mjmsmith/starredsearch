@@ -207,9 +207,9 @@ class App {
   
   private func setupProviders(server: Application) {
     server.providers.append(VaporZewoMustache.Provider(withIncludes: [
+                                                                       "contact": "Includes/contact.mustache",
                                                                        "head": "Includes/head.mustache",
-                                                                       "header": "Includes/header.mustache",
-                                                                       "footer": "Includes/footer.mustache"
+                                                                       "header": "Includes/header.mustache"
                                                                      ]))
   }
 

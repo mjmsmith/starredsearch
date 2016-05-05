@@ -1,7 +1,8 @@
-test stripping, i.e. markdown links with embedded images
-
-limit length of each single result line
-
 fixed search form layout
 
 add logout option
+
+small screen layout
+- check colors on admin view
+- vertical space in form input vs button - make form nowrap?
+- md vs xs columns?
