@@ -1,14 +1,14 @@
 # Overview
 
-**Starred Seach** is a tool to search the readme files in a GitHub user's starred repositories. It lives at [starredsearch.com](http://starredsearch.com).
+**Starred Seach** is a tool to search the readme files in GitHub users' starred repositories. It lives at [starredsearch.com](http://starredsearch.com).
 
 The app is written in Swift using the [Vapor](https://github.com/qutheory/vapor) web framework.
 
 # Prerequisites
 
-Swift build [2016-03-24](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a-osx.pkg).
+Swift build [2016-03-24](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a-osx.pkg) (.pkg download).
 
-A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL path set to `/oauth/github` on your server.
+A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL set to `/oauth/github` on your server.
 
 # Installation
 
@@ -36,7 +36,7 @@ Copy the `Resource` and `Public` directories to the same directory on the server
 
 Add environment variables for `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and `APP_ADMIN_PASSWORD`.
 
-Run `./App --workDir=<your directoru> --port=<your port>`.
+Run `./App --workDir=<your directory> --port=<your port>`.
 
 # Sample launchctl File
 
