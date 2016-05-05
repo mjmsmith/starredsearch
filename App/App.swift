@@ -182,23 +182,23 @@ class App {
 
       let userDicts: [[String:Any]] =
         users
-          .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
-          .map { user in
-            return [
-                     "timeStamp": user.timeStamp.description,
-                     "username": user.username
-                   ]
+        .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
+        .map { user in
+          return [
+                   "timeStamp": user.timeStamp.description,
+                   "username": user.username
+                 ]
       }
       let repoDicts: [[String:Any]] =
         usersByRepo.keys
-          .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
-          .map { repo in
-            return [
-                     "timeStamp": repo.timeStamp.description,
-                     "id": repo.id,
-                     "name": repo.name,
-                     "users": usersByRepo[repo]!.map { user in user.username }
-                   ]
+        .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
+        .map { repo in
+          return [
+                   "timeStamp": repo.timeStamp.description,
+                   "id": repo.id,
+                   "name": repo.name,
+                   "users": usersByRepo[repo]!.map { user in user.username }
+                 ]
       }
       
       return try server.view("admin.mustache", context: ["users": userDicts, "repos": repoDicts])
@@ -292,8 +292,8 @@ class App {
       self.purgeTimeStamp = now
     
       self._usersBySessionIdentifier
-        .filter { _, user in return now.timeInterval(since: user.timeStamp) > UserTimeoutInterval }
-        .forEach { sessionIdentifier, _ in self._usersBySessionIdentifier.removeValue(forKey: sessionIdentifier) }
+      .filter { _, user in return now.timeInterval(since: user.timeStamp) > UserTimeoutInterval }
+      .forEach { sessionIdentifier, _ in self._usersBySessionIdentifier.removeValue(forKey: sessionIdentifier) }
 
       User.purgeRepos()
     })

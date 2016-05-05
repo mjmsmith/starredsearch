@@ -36,8 +36,8 @@ class User {
       let now = NSDate()
       
       self.reposById
-        .filter { _, repo in return now.timeInterval(since: repo.timeStamp) > RepoTimeoutInterval }
-        .forEach { id, _ in self.reposById.removeValue(forKey: id) }
+      .filter { _, repo in return now.timeInterval(since: repo.timeStamp) > RepoTimeoutInterval }
+      .forEach { id, _ in self.reposById.removeValue(forKey: id) }
     })
   }
   
