@@ -104,7 +104,7 @@ class App {
         }
 
         if let path = request.uri.path,
-               url = NSURLComponents.componentsWith(string: path, queryDict: queryDict)?.url {
+               url = NSURLComponents(string: path, queryDict: queryDict)?.url {
           request.session?["nextUrl"] = url.absoluteString
         }
         

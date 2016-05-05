@@ -124,12 +124,12 @@ class User {
   
   private func exchangeCodeForAccessToken(code: String) -> String? {
     var accessToken: String?
-    let requestComponents = NSURLComponents.componentsWith(string: "https://github.com/login/oauth/access_token",
-                                                           queryDict: [
-                                                                        "client_id": GitHubClientID,
-                                                                        "client_secret": GitHubClientSecret,
-                                                                        "code": code
-                                                                      ])!
+    let requestComponents = NSURLComponents(string: "https://github.com/login/oauth/access_token",
+                                            queryDict: [
+                                                         "client_id": GitHubClientID,
+                                                         "client_secret": GitHubClientSecret,
+                                                         "code": code
+                                                       ])!
     let operation = NSBlockOperation(block: {
       let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!)
       
@@ -173,11 +173,11 @@ class User {
 #endif
     
     repeat {
-      let requestComponents = NSURLComponents.componentsWith(string: "https://api.github.com/user/starred",
-                                                             queryDict: [
-                                                                          "page": String(page),
-                                                                          "per_page": String(perPage)
-                                                                        ])!
+      let requestComponents = NSURLComponents(string: "https://api.github.com/user/starred",
+                                              queryDict: [
+                                                           "page": String(page),
+                                                           "per_page": String(perPage)
+                                                         ])!
       let operation = NSBlockOperation(block: {
         let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!,
                                                                      headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.star+json"]))
