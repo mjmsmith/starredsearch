@@ -3,6 +3,11 @@ mark {
   background-color: ffe5b4;
 }
 
+.break-word {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
 a.disabled {
   color: black;
 }
