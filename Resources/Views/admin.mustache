@@ -25,7 +25,7 @@
             {{#users}}
               <tr style="font-size:80%">
                 <td style="white-space:nowrap">{{timeStamp}}</td>
-                <td style="width:100%">{{username}}</td>
+                <td style="white-space:nowrap">{{username}}</td>
               </tr>
             {{/users}}
           </tbody>
@@ -56,7 +56,7 @@
                 <td style="white-space:nowrap">{{timeStamp}}</td>
                 <td class="text-right">{{id}}</td>
                 <td>{{name}}</td>
-                <td style="width:100%">{{#users}}{{.}} {{/users}} </td>
+                <td>{{#users}}{{.}} {{/users}}</td>
               </tr>
             {{/repos}}
           </tbody>
