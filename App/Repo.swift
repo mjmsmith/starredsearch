@@ -1,23 +1,54 @@
 import Foundation
 
+// # title
+private let TitleRegex = try! NSRegularExpression(pattern: "^#+(.*)$", options: .anchorsMatchLines)
+
+// =======
+private let TitleEqualRegex = try! NSRegularExpression(pattern: "^=+ *$", options: .anchorsMatchLines)
+
+// -------
+private let TitleUnderlineRegex = try! NSRegularExpression(pattern: "^=+ *$", options: .anchorsMatchLines)
+
+// ```
+private let CodeBlockRegex = try! NSRegularExpression(pattern: "^```.*$", options: .anchorsMatchLines)
+
+// [example]: http://example.com
+private let FootnoteRegex = try! NSRegularExpression(pattern: "^ *\\[.+?\\]: *.*$", options: .anchorsMatchLines)
+
+// ![example](http://example.com/image.png)
+private let ImageRegex = try! NSRegularExpression(pattern: "!\\[(.*?)\\] *\\(.*?\\)", options: .dotMatchesLineSeparators)
+
+// [example](http://example.com)
+private let LinkRegex = try! NSRegularExpression(pattern: "\\[(.*?)\\] *\\(.*?\\)", options: .dotMatchesLineSeparators)
+
+// [example][example]
+private let FootnoteLinkRegex = try! NSRegularExpression(pattern: "\\[(.+?)\\]\\[.*?\\]", options: .dotMatchesLineSeparators)
+
+// <a href="http://example.com">example</a>
+private let AnchorRegex = try! NSRegularExpression(pattern: "<a .*?>(.*?)</a>", options: .dotMatchesLineSeparators)
+
+// <img src="http://example.com/image.png">
+private let ImgRegex = try! NSRegularExpression(pattern: "<img .*?/?>", options: .dotMatchesLineSeparators)
+
+// <!-- example -->
+private let CommentRegex = try! NSRegularExpression(pattern: "<!--.*?-->", options: .dotMatchesLineSeparators)
+
+// __example__
+private let BoldUnderlineRegex = try! NSRegularExpression(pattern: "__([^ ].*?[^ ])__", options: [])
+
+// **example**
+private let BoldAsteriskRegex = try! NSRegularExpression(pattern: "\\*\\*([^ ].*?[^ ])\\*\\*", options: [])
+
+// _example_
+private let ItalicUnderlineRegex = try! NSRegularExpression(pattern: "_([^ ].*?[^ ])_", options: [])
+
+// *example*
+private let ItalicAsteriskRegex = try! NSRegularExpression(pattern: "\\*([^ ].*?[^ ])\\*", options: [])
+
+// `example`
+private let CodeRegex = try! NSRegularExpression(pattern: "`(.*?)`", options: [])
+
 class Repo {
-  private static let title1Regex = try! NSRegularExpression(pattern: "^#+ +", options: .anchorsMatchLines)
-  private static let title2Regex = try! NSRegularExpression(pattern: "^=+$", options: .anchorsMatchLines)
-  private static let codeBlockRegex = try! NSRegularExpression(pattern: "^```.*$", options: .anchorsMatchLines)
-
-  private static let imageRegex = try! NSRegularExpression(pattern: "!\\[(.*?)\\] ?\\(.*?\\)", options: .dotMatchesLineSeparators)
-  private static let linkRegex = try! NSRegularExpression(pattern: "\\[(.*?)\\] ?\\(.*?\\)", options: .dotMatchesLineSeparators)
-
-  private static let anchorRegex = try! NSRegularExpression(pattern: "<a .*?>(.*?)</a>", options: .dotMatchesLineSeparators)
-  private static let imgRegex = try! NSRegularExpression(pattern: "<img .*?/?>", options: .dotMatchesLineSeparators)
-  private static let commentRegex = try! NSRegularExpression(pattern: "<!--.*?-->", options: .dotMatchesLineSeparators)
-  
-  private static let bold1Regex = try! NSRegularExpression(pattern: "__(.+?)__", options: [])
-  private static let bold2Regex = try! NSRegularExpression(pattern: "\\*\\*(.+?)\\*\\*", options: [])
-  private static let italic1Regex = try! NSRegularExpression(pattern: "_(.+?)_", options: [])
-  private static let italic2Regex = try! NSRegularExpression(pattern: "\\*(.+?)\\*", options: [])
-  private static let codeRegex = try! NSRegularExpression(pattern: "`(.*?)`", options: [])
-  
   private static let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)
 
   let id: Int
@@ -65,22 +96,27 @@ class Repo {
   private static func stripped(markdown markdown: String) -> String {
     var text = markdown
     
-    text = self.title1Regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
-    text = self.title2Regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
-    text = self.codeBlockRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = TitleRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
 
-    text = self.imageRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
-    text = self.linkRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = TitleEqualRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = TitleUnderlineRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = CodeBlockRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = FootnoteRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
 
-    text = self.anchorRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
-    text = self.imgRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
-    text = self.commentRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = ImageRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
     
-    text = self.bold1Regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
-    text = self.bold2Regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
-    text = self.italic1Regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
-    text = self.italic2Regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
-    text = self.codeRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = LinkRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = FootnoteLinkRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+
+    text = AnchorRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = ImgRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    text = CommentRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "")
+    
+    text = BoldUnderlineRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = BoldAsteriskRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = ItalicUnderlineRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = ItalicAsteriskRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
+    text = CodeRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")
     
     return text
   }
