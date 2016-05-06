@@ -3,8 +3,8 @@ import Mustache
 import Vapor
 import VaporZewoMustache
 
-private let UserPurgeInterval = NSTimeInterval(60*60)
-private let UserTimeoutInterval = NSTimeInterval(60*60*24)
+private let PurgeInterval = NSTimeInterval(60*60)
+private let UserTimeoutInterval = NSTimeInterval(60*60*4)
 private let MinQueryLength = 3
 
 class App {
@@ -259,7 +259,7 @@ class App {
   }
 
   private func userForRequest(request: Request) -> User? {
-    self.purgeUsers()
+    self.purgeUsersAndRepos()
     
     guard let sessionIdentifier = request.session?.identifier,
           user = self.userForSessionIdentifier(sessionIdentifier)
@@ -272,12 +272,12 @@ class App {
     return user
   }
   
-  private func purgeUsers() {
+  private func purgeUsersAndRepos() {
     let now = NSDate()
     
     // Check if it's time to purge users.
     
-    guard now.timeInterval(since: self.purgeTimeStamp) > UserPurgeInterval else {
+    guard now.timeInterval(since: self.purgeTimeStamp) > PurgeInterval else {
       return
     }
 
@@ -285,7 +285,7 @@ class App {
     // and update the purge timestamp so nobody tries to get in after us.
     
     dispatch_barrier_sync(self.usersQueue, {
-      guard now.timeInterval(since: self.purgeTimeStamp) > UserPurgeInterval else {
+      guard now.timeInterval(since: self.purgeTimeStamp) > PurgeInterval else {
         return
       }
 
