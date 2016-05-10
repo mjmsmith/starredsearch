@@ -10,6 +10,7 @@
     "F1BC52561A710CF215ADD0AA3A71C2520A285287" : 0,
     "23A93BD79D6F4162360D9B57530A0BAC7A3E8EEA" : 0,
     "1E72C4C11736864B9AA36A7CE5A7583666A1B027" : 0,
+    "52AFDBC9624F22D94526E36BBEE271C6D7FC65D3" : 0,
     "AB3B39DF79E140C049FAA89F0028F2088162E212" : 0,
     "03EF3C3C675C47BC9A550E54C0D6BD6BD290FD21" : 0,
     "287F3CCB1287376788CD8C8A6441419AFFC4A554" : 0,
@@ -25,6 +26,7 @@
     "F1BC52561A710CF215ADD0AA3A71C2520A285287" : "starred\/Packages\/Data-0.4.9\/",
     "23A93BD79D6F4162360D9B57530A0BAC7A3E8EEA" : "starred\/Packages\/Strand-1.1.0\/",
     "1E72C4C11736864B9AA36A7CE5A7583666A1B027" : "starred\/Packages\/SHA2-0.1.0\/",
+    "52AFDBC9624F22D94526E36BBEE271C6D7FC65D3" : "starredsearch\/Packages\/Vapor-0.5.3\/",
     "AB3B39DF79E140C049FAA89F0028F2088162E212" : "starred\/Packages\/CryptoEssentials-0.2.1\/",
     "03EF3C3C675C47BC9A550E54C0D6BD6BD290FD21" : "starredsearch\/",
     "287F3CCB1287376788CD8C8A6441419AFFC4A554" : "starred\/Packages\/HMAC-0.3.1\/",
@@ -65,6 +67,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/qutheory\/vapor-zewo-mustache.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4F6C23CD1048E3CB9DF672911A1E48E51B1B842D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/qutheory\/vapor.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "52AFDBC9624F22D94526E36BBEE271C6D7FC65D3"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Zewo\/OS.git",
