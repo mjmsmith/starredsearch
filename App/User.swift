@@ -7,7 +7,7 @@ import Vapor
   private let MaxRepoCount = 1000
 #endif
 
-private let MaxConcurrentSlowFetchOperations = 40
+private let MaxConcurrentSlowFetchOperations = 50
 private let MaxConcurrentFastFetchOperations = 10
 private let RepoTimeoutInterval = NSTimeInterval(60*60*24)
 
