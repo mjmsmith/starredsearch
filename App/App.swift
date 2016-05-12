@@ -98,7 +98,7 @@ class App {
       guard let user = self.userForRequest(request) else {
         var queryDict = [String: String]()
         
-        for queryItem in request.uri.query where !queryItem.key.starts(with: "/") { // TODO: why is the path included?
+        for queryItem in request.uri.query {
           queryDict[queryItem.key] = queryItem.value.values.first ?? ""
         }
 
@@ -110,8 +110,7 @@ class App {
         return Response(redirect: "/")
       }
       
-      let _query = request.data["query"]?.string ?? "", // TODO: why does this == "query" when the query string field value is empty?
-          query = _query == "query" ? "" : _query
+      let query = request.data["query"]?.string ?? ""
       let order = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .count
       let dicts: [[String:Any]]
 
