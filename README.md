@@ -6,13 +6,13 @@ The app is written in Swift using the [Vapor](https://github.com/qutheory/vapor)
 
 # Prerequisites
 
-Swift build [2016-03-24](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a-osx.pkg) (.pkg download).
+Swift build [2016-05-03](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-05-03-a/swift-DEVELOPMENT-SNAPSHOT-2016-05-03-a-osx.pkg) (.pkg download).
 
 A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL set to `/oauth/github` on your server.
 
 # Installation
 
-Clone the repository and set the active Swift toolchain to the 2016-03-24 build.
+Clone the repository and set the active Swift toolchain to the 2016-05-03 build.
 
 Run `./vapor build --release` to install package dependencies and build the project.
 
