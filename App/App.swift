@@ -112,7 +112,7 @@ class App {
       
       let _query = request.data["query"]?.string ?? "", // TODO: why does this == "query" when the query string field value is empty?
           query = _query == "query" ? "" : _query
-      let sortOrder = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .count
+      let order = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .count
       let dicts: [[String:Any]]
 
       if query.characters.count >= MinQueryLength {
@@ -121,7 +121,7 @@ class App {
           .map { repo in self.repoQueryResults(for: query, in: repo) }
           .filter { results in results.count > 0 }
         
-        dicts = RepoQueryResults.sorted(results: repoQueryResults, by: sortOrder).map { results in
+        dicts = RepoQueryResults.sorted(results: repoQueryResults, by: order).map { results in
           return [
                    "repoId": results.repo.id,
                    "repoName": results.repo.name,
@@ -154,7 +154,7 @@ class App {
                              context: [
                                         "totalCount": user.repos.count,
                                         "query": query,
-                                        "order": sortOrder.rawValue,
+                                        "order": order.rawValue,
                                         "repos": dicts,
                                         "status": status
                                       ])
