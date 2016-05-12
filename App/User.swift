@@ -15,7 +15,7 @@ class User {
   private static var reposById = [Int: Repo]()
   private static let reposByIdQueue = dispatch_queue_create("reposById", DISPATCH_QUEUE_CONCURRENT)
   
-  private static func cachedRepo(id id: Int) -> Repo? {
+  private static func cachedRepo(id: Int) -> Repo? {
     var cachedRepo: Repo?
     dispatch_sync(self.reposByIdQueue, { cachedRepo = self.reposById[id] })
     return cachedRepo
@@ -36,7 +36,7 @@ class User {
       let now = NSDate()
       
       self.reposById
-      .filter { _, repo in return now.timeInterval(since: repo.timeStamp) > RepoTimeoutInterval }
+      .filter { _, repo in return now.timeIntervalSince(repo.timeStamp) > RepoTimeoutInterval }
       .forEach { id, _ in self.reposById.removeValue(forKey: id) }
     })
   }
@@ -99,18 +99,18 @@ class User {
     set { dispatch_barrier_sync(User.fetchedRepoCountsQueue, { self._fetchedRepoCounts = newValue }) }
   }
   
-  func initializeWithCode(code: String) {
+  func initializeWithCode(_ code: String) {
     dispatch_async(User.fetchQueue, {
-      if let accessToken = self.exchangeCodeForAccessToken(code) {
+      if let accessToken = self.exchangeCodeForAccessToken(code: code) {
         self.accessToken = accessToken
         
         self.username = self.fetchUsername() ?? "(unknown)"
         
         self.reposState = .fetching
-        self.repos = self.fetchStarredRepos(self.fetchStarredRepoDicts())
+        self.repos = self.fetchStarredRepos(dicts: self.fetchStarredRepoDicts())
         
         for repo in self.repos {
-          User.cacheRepo(repo)
+          User.cacheRepo(repo: repo)
         }
       }
       
@@ -151,7 +151,7 @@ class User {
       let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: NSURL(string: "https://api.github.com/user")!,
                                                                    headers: self.authorizedRequestHeaders())
       
-      if let bytes = data?.arrayOfBytes(), json = try? Json(Data(bytes)), dict = json.object {
+      if let bytes = data?.byteArray, json = try? Json(Data(bytes)), dict: [String: Node] = json.object {
         username = dict["login"]?.string
       }
     })
@@ -180,9 +180,9 @@ class User {
                                                          ])!
       let operation = NSBlockOperation(block: {
         let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!,
-                                                                     headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.star+json"]))
+                                                                     headers: self.authorizedRequestHeaders(with: ["Accept": "application/vnd.github.star+json"]))
         
-        if let bytes = data?.arrayOfBytes(), json = try? Json(Data(bytes)), array = json.array {
+        if let bytes = data?.byteArray, json = try? Json(Data(bytes)), array: [Node] = json.array {
           dicts += array.flatMap { $0.object }
 
           if array.count < perPage || dicts.count >= MaxRepoCount {
@@ -235,7 +235,7 @@ class User {
       return NSBlockOperation(block: {
         if let readmeUrl = repo.readmeUrl {
           let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: readmeUrl,
-                                                                       headers: self.authorizedRequestHeaders(["Accept": "application/vnd.github.raw"]))
+                                                                       headers: self.authorizedRequestHeaders(with: ["Accept": "application/vnd.github.raw"]))
           
           if let stringData = data, string = String(data: stringData, encoding: NSUTF8StringEncoding) {
             repo.setReadme(withMarkdown: string)
@@ -251,7 +251,7 @@ class User {
     return cachedRepos + newRepos
   }
   
-  private func authorizedRequestHeaders(headers: [String:String] = [:]) -> [String:String] {
+  private func authorizedRequestHeaders(with headers: [String:String] = [:]) -> [String:String] {
     guard let accessToken = self.accessToken else { return headers }
     
     var authorizedHeaders = headers

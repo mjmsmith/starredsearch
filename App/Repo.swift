@@ -85,15 +85,15 @@ class Repo {
     self.starredAt = starredAt
   }
 
-  func linesMatching(query query: String) -> [String] {
+  func linesMatching(query: String) -> [String] {
     return self.readme?.filter { $0.localizedCaseInsensitiveContains(query) } ?? []
   }
   
   func setReadme(withMarkdown markdown: String) {
-    self.readme = Repo.stripped(markdown: markdown).componentsSeparated(by: "\n").filter { !$0.isEmpty }
+    self.readme = Repo.stripped(markdown: markdown).components(separatedBy: "\n").filter { !$0.isEmpty }
   }
   
-  private static func stripped(markdown markdown: String) -> String {
+  private static func stripped(markdown: String) -> String {
     var text = markdown
     
     text = TitleRegex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.characters.count), withTemplate: "$1")

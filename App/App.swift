@@ -1,7 +1,6 @@
 import Foundation
 import Mustache
 import Vapor
-import VaporZewoMustache
 
 private let PurgeInterval = NSTimeInterval(60*60)
 private let UserTimeoutInterval = NSTimeInterval(60*60*4)
@@ -18,8 +17,8 @@ class App {
   init() {
     self.shortDateFormatter.dateStyle = .shortStyle
     
-    setupRoutes(server)
-    setupProviders(server)
+    setupRoutes(server: server)
+    setupProviders(server: server)
   }
   
   func startServer() {
@@ -100,7 +99,7 @@ class App {
         var queryDict = [String: String]()
         
         for queryItem in request.uri.query where !queryItem.key.starts(with: "/") { // TODO: why is the path included?
-          queryDict[queryItem.key] = queryItem.value
+          queryDict[queryItem.key] = queryItem.value.values.first ?? ""
         }
 
         if let path = request.uri.path,
@@ -163,7 +162,7 @@ class App {
 
     server.get("admin") { [unowned self] request in
       guard let headerValue = request.headers["Authorization"].values.first where headerValue.starts(with: "Basic "),
-            let passwordData = NSData(base64EncodedString: headerValue.substring(from: headerValue.startIndex.advanced(by: 6))),
+            let passwordData = NSData(base64Encoded: headerValue.substring(from: headerValue.index(headerValue.startIndex, offsetBy: 6))),
                 password = NSString(data: passwordData, encoding: NSUTF8StringEncoding) where password == ":\(AppAdminPassword)"
       else {
         return Response(status: .unauthorized, headers: ["WWW-Authenticate": "Basic"])
@@ -206,11 +205,11 @@ class App {
   }
   
   private func setupProviders(server: Application) {
-    server.providers.append(VaporZewoMustache.Provider(withIncludes: [
-                                                                       "contact": "Includes/contact.mustache",
-                                                                       "head": "Includes/head.mustache",
-                                                                       "header": "Includes/header.mustache"
-                                                                     ]))
+    server.providers.append(MustacheProvider(withIncludes: [
+                                                             "contact": "Includes/contact.mustache",
+                                                             "head": "Includes/head.mustache",
+                                                             "header": "Includes/header.mustache"
+                                                           ]))
   }
 
   private func repoQueryResults(for query: String, in repo: Repo) -> RepoQueryResults {
@@ -223,13 +222,13 @@ class App {
         var substrings = [String]()
         
         for range in ranges {
-         if (currentIndex != range.startIndex) {
-            substrings.append(escapeHTML(line.substring(with: currentIndex..<range.startIndex)))
+         if (currentIndex != range.lowerBound) {
+            substrings.append(escapeHTML(line.substring(with: currentIndex..<range.lowerBound)))
          }
         
          substrings.append("<mark>\(escapeHTML(line.substring(with: range)))</mark>")
         
-         currentIndex = range.endIndex
+         currentIndex = range.upperBound
         }
         
         if (currentIndex != line.endIndex) {
@@ -246,7 +245,7 @@ class App {
     return RepoQueryResults(repo: repo, count: repoResults.count, htmls: repoResults.htmls)
   }
   
-  private func userForSessionIdentifier(sessionIdentifier: String) -> User? {
+  private func userForSessionIdentifier(_ sessionIdentifier: String) -> User? {
     var user: User?
     
     dispatch_sync(self.usersQueue, { user = self._usersBySessionIdentifier[sessionIdentifier]})
@@ -254,11 +253,11 @@ class App {
     return user
   }
   
-  private func setUser(user: User, forSessionIdentifier sessionIdentifier: String) {
+  private func setUser(_ user: User, forSessionIdentifier sessionIdentifier: String) {
     dispatch_barrier_sync(self.usersQueue, { self._usersBySessionIdentifier[sessionIdentifier] = user })
   }
 
-  private func userForRequest(request: Request) -> User? {
+  private func userForRequest(_ request: Request) -> User? {
     self.purgeUsersAndRepos()
     
     guard let sessionIdentifier = request.session?.identifier,
@@ -277,7 +276,7 @@ class App {
     
     // Check if it's time to purge users.
     
-    guard now.timeInterval(since: self.purgeTimeStamp) > PurgeInterval else {
+    guard now.timeIntervalSince(self.purgeTimeStamp) > PurgeInterval else {
       return
     }
 
@@ -285,14 +284,14 @@ class App {
     // and update the purge timestamp so nobody tries to get in after us.
     
     dispatch_barrier_sync(self.usersQueue, {
-      guard now.timeInterval(since: self.purgeTimeStamp) > PurgeInterval else {
+      guard now.timeIntervalSince(self.purgeTimeStamp) > PurgeInterval else {
         return
       }
 
       self.purgeTimeStamp = now
     
       self._usersBySessionIdentifier
-      .filter { _, user in return now.timeInterval(since: user.timeStamp) > UserTimeoutInterval }
+      .filter { _, user in return now.timeIntervalSince(user.timeStamp) > UserTimeoutInterval }
       .forEach { sessionIdentifier, _ in self._usersBySessionIdentifier.removeValue(forKey: sessionIdentifier) }
 
       User.purgeRepos()

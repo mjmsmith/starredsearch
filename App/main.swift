@@ -5,7 +5,7 @@ import Vapor
   private let EnvDict:[String:Node] = {
     let path = Process.valueFor(argument: "workDir")! + "/debug.json"
     let data = NSData(contentsOfFile: path)!
-    let json = try! Json(Data(data.arrayOfBytes()))
+    let json = try! Json(Data(data.byteArray))
     return json.object!
   }()
     

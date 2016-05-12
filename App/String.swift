@@ -6,7 +6,7 @@ extension String {
       return []
     }
     
-    return [range] + self.ranges(of: searchString, searchRange: range.endIndex..<self.endIndex)
+    return [range] + self.ranges(of: searchString, searchRange: range.upperBound..<self.endIndex)
   }
 
   func truncated(length: Int, trailing: String? = "...") -> String {
@@ -14,6 +14,6 @@ extension String {
       return self
     }
 
-    return self.substring(to: self.startIndex.advanced(by: length)) + (trailing ?? "")
+    return self.substring(to: self.index(self.startIndex, offsetBy: length)) + (trailing ?? "")
   }
 }
