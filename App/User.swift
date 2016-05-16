@@ -218,13 +218,16 @@ class User {
              ownerDict = repoDict["owner"]?.object,
              ownerId = ownerDict["id"]?.int,
              ownerName = ownerDict["login"]?.string,
+             forksCount = repoDict["forks"]?.int,
+             starsCount = repoDict["stargazers_count"]?.int,
              starredAtStr = dict["starred_at"]?.string,
              starredAt = NSDate.date(fromIsoString: starredAtStr) {
         if let repo = User.cachedRepo(id: id) {
           cachedRepos.append(repo)
         }
         else {
-          newRepos.append(Repo(id: id, name: name, ownerId: ownerId, ownerName: ownerName, starredAt: starredAt))
+          newRepos.append(Repo(id: id, name: name, ownerId: ownerId, ownerName: ownerName,
+                               forksCount: forksCount, starsCount: starsCount, starredAt: starredAt))
         }
       }
     }

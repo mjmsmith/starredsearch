@@ -128,8 +128,10 @@ class App {
                    "ownerId": results.repo.ownerId,
                    "ownerName": results.repo.ownerName,
                    "ownerUrl": results.repo.ownerUrl?.absoluteString ?? "",
+                   "forksCount": results.repo.forksCount,
+                   "starsCount": results.repo.starsCount,
                    "starredAt": self.shortDateFormatter.string(from: results.repo.starredAt),
-                   "count" : results.count,
+                   "matchesCount" : results.count,
                    "lines": results.htmls
                  ]
           }

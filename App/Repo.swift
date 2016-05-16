@@ -55,6 +55,8 @@ class Repo {
   let name: String
   let ownerId: Int
   let ownerName: String
+  let forksCount: Int
+  let starsCount: Int
   let starredAt: NSDate
   let timeStamp = NSDate()
 
@@ -77,10 +79,12 @@ class Repo {
   
   private var _readme: [String]?
 
-  init(id: Int, name: String, ownerId: Int, ownerName: String, starredAt: NSDate) {
+  init(id: Int, name: String, ownerId: Int, ownerName: String, forksCount: Int, starsCount: Int, starredAt: NSDate) {
     self.id = id
     self.name = name
     self.ownerId = ownerId
+    self.forksCount = forksCount
+    self.starsCount = starsCount
     self.ownerName = ownerName
     self.starredAt = starredAt
   }
