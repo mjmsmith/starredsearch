@@ -33,9 +33,9 @@
         <table class="table {{^repos}}hidden{{/repos}}">
           <thead>
             <tr>
-              <th class="text-right"><a href="#" id="owner" onclick="sort('owner')">owner</a></th>
+              <th class="text-right" style="padding-right:0"><a href="#" id="owner" onclick="sort('owner')">owner</a></th>
               <th></th>
-              <th class="text-left"><a href="#" id="name" onclick="sort('name')">repository</a></th>
+              <th class="text-left" style="padding-left:0"><a href="#" id="name" onclick="sort('name')">repository</a></th>
               <th class="text-right"><a href="#" id="count" onclick="sort('count')">matches</a></th>
               <th class="text-right"><a href="#" id="starred" onclick="sort('starred')">starred</a></th>
             </tr>
@@ -43,9 +43,9 @@
           <tbody>
             {{#repos}}
               <tr>
-                <td class="text-right" style="white-space:nowrap"><a href="{{ownerUrl}}">{{ownerName}}</a></td>
+                <td class="text-right" style="white-space:nowrap; padding-right:0"><a href="{{ownerUrl}}">{{ownerName}}</a></td>
                 <td class="text-center" style="padding-left:0; padding-right:0">/</td>
-                <td class="text-left" style="white-space:nowrap">
+                <td class="text-left" style="white-space:nowrap; padding-left:0">
                   <a href="{{repoUrl}}" style="vertical-align:top">{{repoName}}</a>
                   <a href="{{repoUrl}}/stargazers" class="btn btn-default btn-xs" style="padding:0 4px; margin:0 6px 2px 2px">
                     <span class="octicon octicon-star" style="font-size:10pt"></span>
@@ -61,7 +61,7 @@
               </tr>
               <tr>
                 <td colspan="2" style="font-size:90%; border:none; padding-top:0"></td>
-                <td colspan="3" style="font-size:90%; border:none; padding-top:0">
+                <td colspan="3" style="font-size:90%; border:none; padding-top:0; padding-left:0">
                   {{#lines}}
                     <div class="break-word" style="padding-bottom:5px; line-height:1.25">{{{.}}}</div>
                   {{/lines}}
