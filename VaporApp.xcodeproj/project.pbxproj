@@ -975,7 +975,7 @@
 				"__PBXFileRef_Packages/Vapor-0.8.1/Sources/Development/Models/User.swift" /* Models/User.swift */,
 			);
 			name = Development;
-			path = "Packages/Vapor-0.8.1/Sources/Development";
+			path = "Packages/Vapor-0.8.2/Sources/Development";
 			sourceTree = "<group>";
 		};
 		"_______Group_Generator" /* Generator */ = {
@@ -984,7 +984,7 @@
 				"__PBXFileRef_Packages/Vapor-0.8.1/Sources/Generator/main.swift" /* main.swift */,
 			);
 			name = Generator;
-			path = "Packages/Vapor-0.8.1/Sources/Generator";
+			path = "Packages/Vapor-0.8.2/Sources/Generator";
 			sourceTree = "<group>";
 		};
 		"_______Group_HMAC" /* HMAC */ = {
@@ -1053,7 +1053,7 @@
 				"__PBXFileRef_Packages/Mustache-0.6.0/Sources/Mustache/Compiling/TemplateAST/VariableTag.swift" /* Compiling/TemplateAST/VariableTag.swift */,
 			);
 			name = Mustache;
-			path = "Packages/Mustache-0.6.0/Sources/Mustache";
+			path = "Packages/Mustache-0.6.1/Sources/Mustache";
 			sourceTree = "<group>";
 		};
 		"_______Group_Performance" /* Performance */ = {
@@ -1062,7 +1062,7 @@
 				"__PBXFileRef_Packages/Vapor-0.8.1/Sources/Performance/main.swift" /* main.swift */,
 			);
 			name = Performance;
-			path = "Packages/Vapor-0.8.1/Sources/Performance";
+			path = "Packages/Vapor-0.8.2/Sources/Performance";
 			sourceTree = "<group>";
 		};
 		"_______Group_PureJson" /* PureJson */ = {
@@ -1142,7 +1142,7 @@
 				"__PBXFileRef_Packages/StructuredData-0.7.0/Sources/StructuredData.swift" /* StructuredData.swift */,
 			);
 			name = StructuredData;
-			path = "Packages/StructuredData-0.7.0/Sources";
+			path = "Packages/StructuredData-0.7.1/Sources";
 			sourceTree = "<group>";
 		};
 		"_______Group_Vapor" /* Vapor */ = {
@@ -1216,7 +1216,7 @@
 				"__PBXFileRef_Packages/Vapor-0.8.1/Sources/Vapor/Validation/Convenience/Unique.swift" /* Validation/Convenience/Unique.swift */,
 			);
 			name = Vapor;
-			path = "Packages/Vapor-0.8.1/Sources/Vapor";
+			path = "Packages/Vapor-0.8.2/Sources/Vapor";
 			sourceTree = "<group>";
 		};
 		"_______Group_libc" /* libc */ = {
@@ -1225,7 +1225,7 @@
 				"__PBXFileRef_Packages/Vapor-0.8.1/Sources/libc/libc.swift" /* libc.swift */,
 			);
 			name = libc;
-			path = "Packages/Vapor-0.8.1/Sources/libc";
+			path = "Packages/Vapor-0.8.2/Sources/libc";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
