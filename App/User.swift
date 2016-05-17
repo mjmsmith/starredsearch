@@ -20,6 +20,14 @@ class User {
     dispatch_sync(self.reposByIdQueue, { cachedRepo = self.reposById[id] })
     return cachedRepo
   }
+
+  static var cachedRepos: [Repo] {
+    get {
+      var cachedRepos = [Repo]()
+      dispatch_sync(self.reposByIdQueue, { cachedRepos = Array(self.reposById.values) })
+      return cachedRepos
+    }
+  }
   
   private static func cacheRepo(repo: Repo) {
     dispatch_barrier_sync(self.reposByIdQueue, { self.reposById[repo.id] = repo })

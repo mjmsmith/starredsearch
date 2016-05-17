@@ -190,14 +190,14 @@ class App {
                  ]
       }
       let repoDicts: [[String:Any]] =
-        usersByRepo.keys
+        User.cachedRepos
         .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
         .map { repo in
           return [
                    "timeStamp": repo.timeStamp.description,
                    "id": repo.id,
                    "name": repo.name,
-                   "users": usersByRepo[repo]!.map { user in user.username }
+                   "users": (usersByRepo[repo]?.map { user in user.username }) ?? []
                  ]
       }
       
