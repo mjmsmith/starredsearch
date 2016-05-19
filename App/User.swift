@@ -4,7 +4,7 @@ import Vapor
 #if DEBUG
   private let MaxRepoCount = 50
 #else
-  private let MaxRepoCount = 1000
+  private let MaxRepoCount = 5000
 #endif
 
 private let MaxConcurrentSlowFetchOperations = 50
