@@ -1,6 +1,7 @@
 import Foundation
 import Mustache
 import Vapor
+import VaporZewoMustache
 
 private let PurgeInterval = NSTimeInterval(60*60)
 private let UserTimeoutInterval = NSTimeInterval(60*60*4)
@@ -206,11 +207,11 @@ class App {
   }
   
   private func setupProviders(server: Application) {
-    server.providers.append(MustacheProvider(withIncludes: [
-                                                             "contact": "Includes/contact.mustache",
-                                                             "head": "Includes/head.mustache",
-                                                             "header": "Includes/header.mustache"
-                                                           ]))
+    server.providers.append(Provider(withIncludes: [
+                                                     "contact": "Includes/contact.mustache",
+                                                     "head": "Includes/head.mustache",
+                                                     "header": "Includes/header.mustache"
+                                                   ]))
   }
 
   private func repoQueryResults(for query: String, in repo: Repo) -> RepoQueryResults {

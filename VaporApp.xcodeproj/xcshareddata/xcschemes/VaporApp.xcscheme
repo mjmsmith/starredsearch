@@ -252,6 +252,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_VaporZewoMustache"
+               BuildableName = "VaporZewoMustache.dylib"
+               BlueprintName = "VaporZewoMustache"
+               ReferencedContainer = "container:VaporApp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "______Target_App"
                BuildableName = "App"
                BlueprintName = "App"
