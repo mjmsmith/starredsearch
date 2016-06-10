@@ -296,119 +296,119 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4D5CD34A1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD35B1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_CryptoEssentials";
 			remoteInfo = CryptoEssentials;
 		};
-		4D5CD34B1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD35C1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Strand";
 			remoteInfo = Strand;
 		};
-		4D5CD34C1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD35D1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_C7";
 			remoteInfo = C7;
 		};
-		4D5CD34D1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD35E1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_PathIndexable";
 			remoteInfo = PathIndexable;
 		};
-		4D5CD34E1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD35F1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Fluent";
 			remoteInfo = Fluent;
 		};
-		4D5CD34F1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3601D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_MediaType";
 			remoteInfo = MediaType;
 		};
-		4D5CD3501D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3611D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_String";
 			remoteInfo = String;
 		};
-		4D5CD3511D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3621D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_SHA2";
 			remoteInfo = SHA2;
 		};
-		4D5CD3521D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3631D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_HMAC";
 			remoteInfo = HMAC;
 		};
-		4D5CD3531D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3641D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Hummingbird";
 			remoteInfo = Hummingbird;
 		};
-		4D5CD3541D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3651D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_PureJSON";
 			remoteInfo = PureJSON;
 		};
-		4D5CD3551D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3661D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_PureJSONFoundation";
 			remoteInfo = PureJSONFoundation;
 		};
-		4D5CD3561D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3671D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_S4";
 			remoteInfo = S4;
 		};
-		4D5CD3571D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3681D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_libc";
 			remoteInfo = libc;
 		};
-		4D5CD3581D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD3691D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Vapor";
 			remoteInfo = Vapor;
 		};
-		4D5CD3591D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD36A1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "______Target_Mustache";
 			remoteInfo = Mustache;
 		};
-		4D5CD35A1D0B1B8400C86DB2 /* PBXContainerItemProxy */ = {
+		4D5CD36B1D0B242900C86DB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
 			proxyType = 1;
@@ -2075,87 +2075,87 @@
 		__Dependency_C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_C7" /* C7 */;
-			targetProxy = 4D5CD34C1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD35D1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_CryptoEssentials /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_CryptoEssentials" /* CryptoEssentials */;
-			targetProxy = 4D5CD34A1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD35B1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Fluent /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Fluent" /* Fluent */;
-			targetProxy = 4D5CD34E1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD35F1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_HMAC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_HMAC" /* HMAC */;
-			targetProxy = 4D5CD3521D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3631D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Hummingbird /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Hummingbird" /* Hummingbird */;
-			targetProxy = 4D5CD3531D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3641D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_MediaType /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_MediaType" /* MediaType */;
-			targetProxy = 4D5CD34F1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3601D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Mustache /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Mustache" /* Mustache */;
-			targetProxy = 4D5CD3591D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD36A1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_PathIndexable /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_PathIndexable" /* PathIndexable */;
-			targetProxy = 4D5CD34D1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD35E1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_PureJSON /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_PureJSON" /* PureJSON */;
-			targetProxy = 4D5CD3541D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3651D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_PureJSONFoundation /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_PureJSONFoundation" /* PureJSONFoundation */;
-			targetProxy = 4D5CD3551D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3661D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_S4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_S4" /* S4 */;
-			targetProxy = 4D5CD3561D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3671D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_SHA2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_SHA2" /* SHA2 */;
-			targetProxy = 4D5CD3511D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3621D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Strand /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Strand" /* Strand */;
-			targetProxy = 4D5CD34B1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD35C1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_String /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_String" /* String */;
-			targetProxy = 4D5CD3501D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3611D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_Vapor /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Vapor" /* Vapor */;
-			targetProxy = 4D5CD3581D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3691D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_VaporMustache /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_VaporMustache" /* VaporMustache */;
-			targetProxy = 4D5CD35A1D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD36B1D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 		__Dependency_libc /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_libc" /* libc */;
-			targetProxy = 4D5CD3571D0B1B8400C86DB2 /* PBXContainerItemProxy */;
+			targetProxy = 4D5CD3681D0B242900C86DB2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
