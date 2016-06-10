@@ -6,19 +6,21 @@ The app is written in Swift using the [Vapor](https://github.com/qutheory/vapor)
 
 # Prerequisites
 
-Swift build [2016-05-03](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-05-03-a/swift-DEVELOPMENT-SNAPSHOT-2016-05-03-a-osx.pkg) (.pkg download).
+* Swift build 2016-05-31 [(.pkg download)](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-05-31-a/swift-DEVELOPMENT-SNAPSHOT-2016-05-31-a-osx.pkg).
 
-A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL set to `/oauth/github` on your server.
+* The [Vapor CLI](https://vapor.readme.io/docs/install-cli).
 
-# Installation
+* A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL set to `/oauth/github` on your server.
 
-Clone the repository and set the active Swift toolchain to the 2016-05-03 build.
+# Build
 
-Run `./vapor build --release` to install package dependencies and build the project.
+Set the active Swift toolchain to the 2016-05-31 build. (If you have [swiftenv](https://github.com/kylef/swiftenv) installed, the .swift-version file will set it for you.)
+
+Run `vapor build` to install package dependencies and build the project.
 
 # Debug Environment
 
-To debug the app in Xcode, create the file `debug.json` in the local root directory:
+To debug the app in Xcode, create the file `debug.json` in your checkout directory:
 
 ```
 {
@@ -30,7 +32,7 @@ To debug the app in Xcode, create the file `debug.json` in the local root direct
 
 # Release Environment
 
-Build the app using `./vapor build --release` and copy `.build/release/App` to the server.
+Build the app using `vapor build --release` and copy `.build/release/App` to the server.
 
 Copy the `Resource` and `Public` directories to the same directory on the server.
 

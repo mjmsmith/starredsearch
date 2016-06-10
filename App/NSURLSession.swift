@@ -1,7 +1,7 @@
 import Foundation
 
 extension NSURLSession {
-  func synchronousDataTask(with url: NSURL, headers: [String:String] = [:]) -> (NSData?, NSURLResponse?, NSError?) {
+  func synchronousDataTask(with url: NSURL, headers: [String: String] = [:]) -> (NSData?, NSURLResponse?, NSError?) {
     let request = NSMutableURLRequest(url: url)
 
     for (name, value) in headers {
@@ -9,7 +9,7 @@ extension NSURLSession {
     }
     
     var returnValue: (NSData?, NSURLResponse?, NSError?)
-    let semaphore = dispatch_semaphore_create(0)
+    let semaphore = dispatch_semaphore_create(0)!
 
     self.dataTask(with: request) {
       returnValue = ($0, $1, $2)

@@ -49,7 +49,7 @@ private let ItalicAsteriskRegex = try! NSRegularExpression(pattern: "\\*([^ ].*?
 private let CodeRegex = try! NSRegularExpression(pattern: "`(.*?)`", options: [])
 
 class Repo {
-  private static let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)
+  private static let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)!
 
   let id: Int
   let name: String

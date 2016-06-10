@@ -1,7 +1,7 @@
 import Foundation
 
 extension NSURLComponents {
-  convenience init?(string: String, queryDict: [String:String]) {
+  convenience init?(string: String, queryDict: [String: String]) {
     self.init(string: string)
 
     if queryDict.count > 0 {

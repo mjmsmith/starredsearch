@@ -2,10 +2,10 @@ import Foundation
 import Vapor
 
 #if DEBUG
-  private let EnvDict:[String:Node] = {
+  private let EnvDict: [String: JSON] = {
     let path = Process.valueFor(argument: "workDir")! + "/debug.json"
     let data = NSData(contentsOfFile: path)!
-    let json = try! Json(Data(data.byteArray))
+    let json = try! JSON(Data(data.byteArray))
     return json.object!
   }()
     

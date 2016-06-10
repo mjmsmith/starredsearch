@@ -1,7 +1,7 @@
 import Foundation
 import Mustache
 import Vapor
-import VaporZewoMustache
+import VaporMustache
 
 private let PurgeInterval = NSTimeInterval(60*60)
 private let UserTimeoutInterval = NSTimeInterval(60*60*4)
@@ -13,7 +13,7 @@ class App {
   private var purgeTimeStamp = NSDate()
 
   private var _usersBySessionIdentifier = [String: User]()
-  private let usersQueue = dispatch_queue_create("usersQueue", DISPATCH_QUEUE_CONCURRENT)
+  private let usersQueue = dispatch_queue_create("usersQueue", DISPATCH_QUEUE_CONCURRENT)!
   
   init() {
     self.shortDateFormatter.dateStyle = .shortStyle
@@ -23,11 +23,7 @@ class App {
   }
   
   func startServer() {
-#if DEBUG
-    self.server.start(port:8080)
-#else
     self.server.start()
-#endif
   }
   
   private func setupRoutes(server: Application) {
@@ -77,7 +73,7 @@ class App {
       }
 
       let fetchedRepoCounts = user.fetchedRepoCounts
-      var dict:[String:JsonRepresentable] = ["fetchedCount": fetchedRepoCounts.fetchedCount, "totalCount": fetchedRepoCounts.totalCount]
+      var dict: [String: Any] = ["fetchedCount": fetchedRepoCounts.fetchedCount, "totalCount": fetchedRepoCounts.totalCount]
       
       dict["status"] = {
         switch user.reposState {
@@ -92,7 +88,7 @@ class App {
         dict["nextUrl"] = request.session?["nextUrl"] ?? "/search"
       }
       
-      return Json(dict)
+      return JSON(dict)
     }
 
     server.get("search") { [unowned self] request in
@@ -100,7 +96,7 @@ class App {
         var queryDict = [String: String]()
         
         for queryItem in request.uri.query {
-          queryDict[queryItem.key] = queryItem.value.values.first ?? ""
+          queryDict[queryItem.key] = queryItem.value.first ?? ""
         }
 
         if let path = request.uri.path,
@@ -113,7 +109,7 @@ class App {
       
       let query = request.data["query"]?.string ?? ""
       let order = RepoQueryResults.SortOrder(rawValue: request.data["order"]?.string ?? "") ?? .count
-      let dicts: [[String:Any]]
+      let dicts: [[String: Any]]
 
       if query.characters.count >= MinQueryLength {
         let repoQueryResults =
@@ -181,7 +177,7 @@ class App {
         }
       }
 
-      let userDicts: [[String:Any]] =
+      let userDicts: [[String: Any]] =
         users
         .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
         .map { user in
@@ -190,7 +186,7 @@ class App {
                    "username": user.username
                  ]
       }
-      let repoDicts: [[String:Any]] =
+      let repoDicts: [[String: Any]] =
         User.cachedRepos
         .sorted() { left, right in left.timeStamp.compare(right.timeStamp) == .orderedAscending }
         .map { repo in
@@ -219,7 +215,7 @@ class App {
       repo
       .linesMatching(query: query)
       .map { line in
-        let ranges = line.ranges(of: query, options:.caseInsensitiveSearch)
+        let ranges = line.ranges(of: query, options: .caseInsensitiveSearch)
         var currentIndex = line.startIndex
         var substrings = [String]()
         

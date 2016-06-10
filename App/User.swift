@@ -13,7 +13,7 @@ private let RepoTimeoutInterval = NSTimeInterval(60*60*24)
 
 class User {
   private static var reposById = [Int: Repo]()
-  private static let reposByIdQueue = dispatch_queue_create("reposById", DISPATCH_QUEUE_CONCURRENT)
+  private static let reposByIdQueue = dispatch_queue_create("reposById", DISPATCH_QUEUE_CONCURRENT)!
   
   private static func cachedRepo(id: Int) -> Repo? {
     var cachedRepo: Repo?
@@ -33,11 +33,11 @@ class User {
     dispatch_barrier_sync(self.reposByIdQueue, { self.reposById[repo.id] = repo })
   }
 
-  private static let usernameQueue = dispatch_queue_create("username", DISPATCH_QUEUE_CONCURRENT)
-  private static let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)
-  private static let reposQueue = dispatch_queue_create("repos", DISPATCH_QUEUE_CONCURRENT)
-  private static let reposStateQueue = dispatch_queue_create("reposState", DISPATCH_QUEUE_CONCURRENT)
-  private static let fetchedRepoCountsQueue = dispatch_queue_create("fetchedRepoCounts", DISPATCH_QUEUE_CONCURRENT)
+  private static let usernameQueue = dispatch_queue_create("username", DISPATCH_QUEUE_CONCURRENT)!
+  private static let timeStampQueue = dispatch_queue_create("timeStamp", DISPATCH_QUEUE_CONCURRENT)!
+  private static let reposQueue = dispatch_queue_create("repos", DISPATCH_QUEUE_CONCURRENT)!
+  private static let reposStateQueue = dispatch_queue_create("reposState", DISPATCH_QUEUE_CONCURRENT)!
+  private static let fetchedRepoCountsQueue = dispatch_queue_create("fetchedRepoCounts", DISPATCH_QUEUE_CONCURRENT)!
   
   static func purgeRepos() {
     dispatch_barrier_sync(self.reposByIdQueue, {
@@ -49,7 +49,7 @@ class User {
     })
   }
   
-  private static let fetchQueue = dispatch_queue_create("fetch", DISPATCH_QUEUE_CONCURRENT)
+  private static let fetchQueue = dispatch_queue_create("fetch", DISPATCH_QUEUE_CONCURRENT)!
 
   private static let fastFetchOperationQueue: NSOperationQueue = {
     let operationQueue = NSOperationQueue()
@@ -159,7 +159,7 @@ class User {
       let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: NSURL(string: "https://api.github.com/user")!,
                                                                    headers: self.authorizedRequestHeaders())
       
-      if let bytes = data?.byteArray, json = try? Json(Data(bytes)), dict: [String: Node] = json.object {
+      if let bytes = data?.byteArray, json = try? JSON(Data(bytes)), dict: [String: JSON] = json.object {
         username = dict["login"]?.string
       }
     })
@@ -169,10 +169,10 @@ class User {
     return username
   }
   
-  private func fetchStarredRepoDicts() -> [[String: Node]] {
+  private func fetchStarredRepoDicts() -> [[String: JSON]] {
     guard let _ = self.accessToken else { return [] }
     
-    var dicts = [[String: Node]]()
+    var dicts = [[String: JSON]]()
     var page = 1
     var perPage = 100
     
@@ -190,7 +190,7 @@ class User {
         let (data, _, _) = NSURLSession.shared().synchronousDataTask(with: requestComponents.url!,
                                                                      headers: self.authorizedRequestHeaders(with: ["Accept": "application/vnd.github.star+json"]))
         
-        if let bytes = data?.byteArray, json = try? Json(Data(bytes)), array: [Node] = json.array {
+        if let bytes = data?.byteArray, json = try? JSON(Data(bytes)), array: [JSON] = json.array {
           dicts += array.flatMap { $0.object }
 
           if array.count < perPage || dicts.count >= MaxRepoCount {
@@ -205,13 +205,13 @@ class User {
         }
       })
       
-      User.fastFetchOperationQueue.addOperations([operation], waitUntilFinished:true)
+      User.fastFetchOperationQueue.addOperations([operation], waitUntilFinished: true)
     } while perPage > 0
     
     return dicts
   }
   
-  private func fetchStarredRepos(dicts: [[String: Node]]) -> [Repo] {
+  private func fetchStarredRepos(dicts: [[String: JSON]]) -> [Repo] {
     guard let _ = self.accessToken else { return [] }
 
     self.fetchedRepoCounts = (fetchedCount: 0, totalCount: dicts.count)
@@ -220,10 +220,10 @@ class User {
     var newRepos = [Repo]()
     
     for dict in dicts {
-      if let repoDict = dict["repo"]?.object,
+      if let repoDict: [String: JSON] = dict["repo"]?.object,
              id = repoDict["id"]?.int,
              name = repoDict["name"]?.string,
-             ownerDict = repoDict["owner"]?.object,
+             ownerDict: [String: JSON] = repoDict["owner"]?.object,
              ownerId = ownerDict["id"]?.int,
              ownerName = ownerDict["login"]?.string,
              forksCount = repoDict["forks"]?.int,
@@ -262,7 +262,7 @@ class User {
     return cachedRepos + newRepos
   }
   
-  private func authorizedRequestHeaders(with headers: [String:String] = [:]) -> [String:String] {
+  private func authorizedRequestHeaders(with headers: [String: String] = [:]) -> [String: String] {
     guard let accessToken = self.accessToken else { return headers }
     
     var authorizedHeaders = headers
