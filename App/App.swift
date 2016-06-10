@@ -73,19 +73,22 @@ class App {
       }
 
       let fetchedRepoCounts = user.fetchedRepoCounts
-      var dict: [String: Any] = ["fetchedCount": fetchedRepoCounts.fetchedCount, "totalCount": fetchedRepoCounts.totalCount]
+      var dict: [String: JSON] = [
+        "fetchedCount": JSON(fetchedRepoCounts.fetchedCount),
+        "totalCount": JSON(fetchedRepoCounts.totalCount)
+      ]
       
       dict["status"] = {
         switch user.reposState {
-          case .notFetched: return "Connecting to GitHub..."
-          case .fetching where fetchedRepoCounts.totalCount == 0: return "Getting starred repositories..."
-          case .fetching: return "Fetching \(fetchedRepoCounts.totalCount) readmes..."
-          case .fetched: return "Fetched readmes"
+          case .notFetched: return JSON("Connecting to GitHub...")
+          case .fetching where fetchedRepoCounts.totalCount == 0: return JSON("Getting starred repositories...")
+          case .fetching: return JSON("Fetching \(fetchedRepoCounts.totalCount) readmes...")
+          case .fetched: return JSON("Fetched readmes")
         }
       }()
       
       if user.reposState == .fetched {
-        dict["nextUrl"] = request.session?["nextUrl"] ?? "/search"
+        dict["nextUrl"] = JSON(request.session?["nextUrl"] ?? "/search")
       }
       
       return JSON(dict)
