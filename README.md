@@ -20,7 +20,13 @@ Run `vapor build` to install package dependencies and build the project.
 
 # Debug Environment
 
-To debug the app in Xcode, create the file `debug.json` in your checkout directory:
+Run `vapor xcode` to create the Xcode project. Edit the App scheme and add an argument to the Run action:
+
+```
+  --workDir=$(SRCROOT)
+``` 
+
+Create the file `debug.json` in your checkout directory:
 
 ```
 {
@@ -32,11 +38,11 @@ To debug the app in Xcode, create the file `debug.json` in your checkout directo
 
 # Release Environment
 
-Build the app using `vapor build --release` and copy `.build/release/App` to the server.
+Run `vapor build --release` to build the app and copy `.build/release/App` to the server.
 
 Copy the `Resource` and `Public` directories to the same directory on the server.
 
-Add environment variables for `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and `APP_ADMIN_PASSWORD`.
+Define environment variables for `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and `APP_ADMIN_PASSWORD`.
 
 Run `./App --workDir=<your directory> --port=<your port>`.
 

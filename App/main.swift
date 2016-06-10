@@ -1,21 +1,26 @@
 import Foundation
 import Vapor
 
-#if DEBUG
-  private let EnvDict: [String: JSON] = {
-    let path = Process.valueFor(argument: "workDir")! + "/debug.json"
-    let data = NSData(contentsOfFile: path)!
-    let json = try! JSON(Data(data.byteArray))
-    return json.object!
-  }()
-    
-  let GitHubClientID = EnvDict["GITHUB_CLIENT_ID"]!.string!
-  let GitHubClientSecret = EnvDict["GITHUB_CLIENT_SECRET"]!.string!
-  let AppAdminPassword = EnvDict["APP_ADMIN_PASSWORD"]!.string!
-#else
-  let GitHubClientID = NSProcessInfo.processInfo().environment["GITHUB_CLIENT_ID"]!
-  let GitHubClientSecret = NSProcessInfo.processInfo().environment["GITHUB_CLIENT_SECRET"]!
-  let AppAdminPassword = NSProcessInfo.processInfo().environment["APP_ADMIN_PASSWORD"]!
-#endif
+private func config() -> (String, String, String) {
+  if let workDir = Process.valueFor(argument: "workDir"),
+     let data = NSData(contentsOfFile: "\(workDir)/debug.json"),
+     let json = try? JSON(Data(data.byteArray)),
+     let dict: [String: JSON] = json.object {
+    return (
+      dict["GITHUB_CLIENT_ID"]!.string!,
+      dict["GITHUB_CLIENT_SECRET"]!.string!,
+      dict["APP_ADMIN_PASSWORD"]!.string!
+    )
+  }
+  else {
+    return (
+      NSProcessInfo.processInfo().environment["GITHUB_CLIENT_ID"]!,
+      NSProcessInfo.processInfo().environment["GITHUB_CLIENT_SECRET"]!,
+      NSProcessInfo.processInfo().environment["APP_ADMIN_PASSWORD"]!
+    )
+  }
+}
+
+let (GitHubClientID, GitHubClientSecret, AppAdminPassword) = config()
 
 App().startServer()
