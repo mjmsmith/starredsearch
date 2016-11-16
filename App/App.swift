@@ -8,7 +8,7 @@ private let UserTimeoutInterval = TimeInterval(60*60*4)
 private let MinQueryLength = 3
 
 class App {
-  private let server = Droplet()
+  private let droplet = Droplet()
   private let shortDateFormatter = DateFormatter()
   private var purgeTimeStamp = Date()
 
@@ -18,15 +18,15 @@ class App {
   init() {
     self.shortDateFormatter.dateStyle = .short
     
-    setupRoutes(server: server)
+    setupRoutes()
   }
   
   func startServer() {
-    self.server.run()
+    self.droplet.run()
   }
   
-  private func setupRoutes(server: Droplet) {
-    server.get("/") { [unowned self] request in
+  private func setupRoutes() {
+    self.droplet.get("/") { request in
       // Redirect if we already have a user.
       
       if let user = self.userForRequest(request) {
@@ -39,11 +39,11 @@ class App {
       
       try request.session().data["timeStamp"] = Node(String(Date().timeIntervalSinceReferenceDate))
       
-      return try server.view.make("index",
-                                  ["url": Node("https://github.com/login/oauth/authorize?client_id=\(GitHubClientID)")])
+      return try self.droplet.view.make("index",
+                                        ["url": Node("https://github.com/login/oauth/authorize?client_id=\(GitHubClientID)")])
     }
     
-    server.get("oauth", "github") { [unowned self] request in
+    self.droplet.get("oauth", "github") { request in
       guard let sessionIdentifier = try request.session().identifier,
             let code = request.data["code"]?.string
       else {
@@ -58,15 +58,15 @@ class App {
       return Response(redirect: "/load")
     }
     
-    server.get("load") { [unowned self] request in
+    self.droplet.get("load") { request in
       guard let _ = self.userForRequest(request) else {
         return Response(redirect: "/")
       }
       
-      return try server.view.make("load")
+      return try self.droplet.view.make("load")
     }
     
-    server.get("load", "status") { [unowned self] request in
+    self.droplet.get("load", "status") { request in
       guard let user = self.userForRequest(request) else {
         return Response(status: .unauthorized)
       }
@@ -93,7 +93,7 @@ class App {
       return try JSON(node: dict)
     }
 
-    server.get("search") { [unowned self] request in
+    self.droplet.get("search") { request in
       guard let user = self.userForRequest(request) else {
         var urlComponents = URLComponents()
         
@@ -152,17 +152,17 @@ class App {
         }
       }()
 
-      return try server.view.make("search", [
-                                    "totalCount": Node(user.repos.count),
-                                    "reposCount": Node(String(dicts.count)),
-                                    "query": Node(query),
-                                    "order": Node(order.rawValue),
-                                    "repos": Node(dicts),
-                                    "status": Node(status)
-                                  ])
+      return try self.droplet.view.make("search", [
+                                        "totalCount": Node(user.repos.count),
+                                        "reposCount": Node(String(dicts.count)),
+                                        "query": Node(query),
+                                        "order": Node(order.rawValue),
+                                        "repos": Node(dicts),
+                                        "status": Node(status)
+                                      ])
     }
 
-    server.get("admin") { [unowned self] request in
+    self.droplet.get("admin") { request in
       guard let headerValue = request.headers[HeaderKey("Authorization")], headerValue.hasPrefix("Basic "),
             let passwordData = Data(base64Encoded: headerValue.substring(from: headerValue.index(headerValue.startIndex, offsetBy: 6))),
             let password = String(data: passwordData, encoding: .utf8), password == ":\(AppAdminPassword)"
@@ -202,7 +202,7 @@ class App {
           ]
       }
       
-      return try server.view.make("admin", ["users": Node(userDicts), "repos": Node(repoDicts)])
+      return try self.droplet.view.make("admin", ["users": Node(userDicts), "repos": Node(repoDicts)])
     }
   }
   
