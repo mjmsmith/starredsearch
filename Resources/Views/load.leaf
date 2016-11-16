@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>{{>head}}</head>
+<head>#embed("head")</head>
 
 <body>
-  {{>contact}}
+  #embed("contact")
 
   <div class="container">
-    {{>header}}
+    #embed("header")
 
     <div class="row">
       <div class="col-xs-12 text-center">
@@ -24,6 +24,7 @@
     </div>
   </div>
 
+#raw() {
   <script>
     $(document).ready(function() {
       loadStatus();
@@ -50,6 +51,7 @@
         });
     }
   </script>
+}
 </body>
 
 </html>

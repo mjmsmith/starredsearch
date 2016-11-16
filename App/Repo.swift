@@ -49,7 +49,7 @@ private let ItalicAsteriskRegex = try! NSRegularExpression(pattern: "\\*([^ ].*?
 private let CodeRegex = try! NSRegularExpression(pattern: "`(.*?)`", options: [])
 
 class Repo {
-  private static let readmeQueue = dispatch_queue_create("readme", DISPATCH_QUEUE_CONCURRENT)!
+  private static let readmeQueue = DispatchQueue(label: "readme", attributes: .concurrent)
 
   let id: Int
   let name: String
@@ -57,29 +57,29 @@ class Repo {
   let ownerName: String
   let forksCount: Int
   let starsCount: Int
-  let starredAt: NSDate
-  let timeStamp = NSDate()
+  let starredAt: Date
+  let timeStamp = Date()
 
   private(set) var readme: [String]? {
-    get { var value: [String]?; dispatch_sync(Repo.readmeQueue, { value = self._readme }); return value! }
-    set { dispatch_barrier_sync(Repo.readmeQueue, { self._readme = newValue }) }
+    get { var value: [String]?; Repo.readmeQueue.sync() { value = self._readme }; return value! }
+    set { Repo.readmeQueue.sync(flags: .barrier) { self._readme = newValue } }
   }
   
-  var url: NSURL? {
-    get { return NSURL(string: "https://github.com/\(self.ownerName)/\(self.name)") }
+  var url: URL? {
+    get { return URL(string: "https://github.com/\(self.ownerName)/\(self.name)") }
   }
   
-  var ownerUrl: NSURL? {
-    get { return NSURL(string: "https://github.com/\(self.ownerName)") }
+  var ownerUrl: URL? {
+    get { return URL(string: "https://github.com/\(self.ownerName)") }
   }
   
-  var readmeUrl: NSURL? {
-    get { return NSURL(string: "https://api.github.com/repos/\(self.ownerName)/\(self.name)/readme") }
+  var readmeUrl: URL? {
+    get { return URL(string: "https://api.github.com/repos/\(self.ownerName)/\(self.name)/readme") }
   }
   
   private var _readme: [String]?
 
-  init(id: Int, name: String, ownerId: Int, ownerName: String, forksCount: Int, starsCount: Int, starredAt: NSDate) {
+  init(id: Int, name: String, ownerId: Int, ownerName: String, forksCount: Int, starsCount: Int, starredAt: Date) {
     self.id = id
     self.name = name
     self.ownerId = ownerId

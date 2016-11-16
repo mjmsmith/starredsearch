@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>{{>head}}</head>
+<head>#embed("head")</head>
 
 <body>
-  {{>contact}}
+  #embed("contact")
 
   <div class="container">
-    {{>header}}
+    #embed("header")
 
     <h2 class="col-xs-12 text-center text-success" style="margin-bottom:0">github starred search</h2>
     <h5 class="col-xs-12 text-center text-success" style="margin-top:0">search readmes in your starred repositories</h5>
@@ -22,7 +22,7 @@
 
     <div class="row">
       <div class="col-xs-12 text-center">
-        <button class="btn btn-success" onclick="window.location='{{url}}'">Authorize</button>
+<button class="btn btn-success" onclick="window.location='#(url)'">Authorize</button>
       </div>
     </div>
   </div>

@@ -15,13 +15,13 @@ struct RepoQueryResults {
   static func sorted(results: [RepoQueryResults], by sortOrder: SortOrder) -> [RepoQueryResults] {
     switch sortOrder {
       case .count:
-        return results.sorted(isOrderedBefore: self.countIsOrderedBefore).reversed()
+        return results.sorted(by: self.countIsOrderedBefore).reversed()
       case .starred:
-        return results.sorted(isOrderedBefore: self.starredAtIsOrderedBefore).reversed()
+        return results.sorted(by: self.starredAtIsOrderedBefore).reversed()
       case .name:
-        return results.sorted(isOrderedBefore: self.repoNameIsOrderedBefore)
+        return results.sorted(by: self.repoNameIsOrderedBefore)
       case .owner:
-        return results.sorted(isOrderedBefore: self.ownerNameIsOrderedBefore)
+        return results.sorted(by: self.ownerNameIsOrderedBefore)
     }
   }
 

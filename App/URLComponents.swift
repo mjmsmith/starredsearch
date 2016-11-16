@@ -1,12 +1,12 @@
 import Foundation
 
-extension NSURLComponents {
-  convenience init?(string: String, queryDict: [String: String]) {
+extension URLComponents {
+  init?(string: String, queryDict: [String: String]) {
     self.init(string: string)
 
     if queryDict.count > 0 {
       self.queryItems = queryDict.map { key, value in
-        return NSURLQueryItem(name: key, value: value)
+        return URLQueryItem(name: key, value: value)
       }
     }
   }

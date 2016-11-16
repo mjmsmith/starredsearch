@@ -1,7 +1,7 @@
 import Foundation
 
 extension String {
-  func ranges(of searchString: String, options: NSStringCompareOptions = [], searchRange: Range<Index>? = nil) -> [Range<Index>] {
+  func ranges(of searchString: String, options: CompareOptions = [], searchRange: Range<Index>? = nil) -> [Range<Index>] {
     guard let range = self.range(of: searchString, options: options, range: searchRange) else {
       return []
     }

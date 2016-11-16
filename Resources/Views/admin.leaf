@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>{{>head}}</head>
+<head>#embed("head")</head>
 
 <body>
-  {{>contact}}
+  #embed("contact")
 
   <div class="container">
-    {{>header}}
+    #embed("header")
 
     <div class="row">
       <div class="col-md-offset-1 col-md-10">
@@ -25,12 +25,12 @@
             </tr>
           </thead>
           <tbody>
-            {{#users}}
+            #loop(users, "user") {
               <tr style="font-size:80%">
-                <td style="white-space:nowrap">{{timeStamp}}</td>
-                <td style="white-space:nowrap">{{username}}</td>
+                <td style="white-space:nowrap">#(user.timeStamp)</td>
+                <td style="white-space:nowrap">#(user.username)</td>
               </tr>
-            {{/users}}
+            }
           </tbody>
         </table>
       </div>
@@ -54,14 +54,14 @@
             </tr>
           </thead>
           <tbody>
-            {{#repos}}
+            #loop(repos, "repo") {
               <tr style="font-size:80%">
-                <td style="white-space:nowrap">{{timeStamp}}</td>
-                <td class="text-right">{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{#users}}{{.}} {{/users}}</td>
+                <td style="white-space:nowrap">#(repo.timeStamp)</td>
+                <td class="text-right">#(repo.id)</td>
+                <td>#(repo.name)</td>
+                <td>#loop(repo.users, "user") { #(user) }</td>
               </tr>
-            {{/repos}}
+            }
           </tbody>
         </table>
       </div>

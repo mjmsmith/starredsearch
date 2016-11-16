@@ -2,10 +2,22 @@ import Foundation
 import Vapor
 
 private func config() -> (String, String, String) {
-  if let workDir = Process.valueFor(argument: "workDir"),
-     let data = NSData(contentsOfFile: "\(workDir)/debug.json"),
-     let json = try? JSON(Data(data.byteArray)),
-     let dict: [String: JSON] = json.object {
+  let workdir: String? = {
+    for arg in CommandLine.arguments {
+      let components = arg.components(separatedBy: "=")
+      
+      if components.count == 2 && components[0] == "--workdir" {
+        return components[1]
+      }
+    }
+    
+    return nil
+  }()
+  
+  if let workdir = workdir,
+     let data = try? Data(contentsOf: URL(fileURLWithPath: "\(workdir)/debug.json")),
+     let json = try? JSON(bytes: data.withUnsafeBytes { [UInt8](UnsafeBufferPointer(start: $0, count: data.count)) }),
+     let dict = json.node.nodeObject {
     return (
       dict["GITHUB_CLIENT_ID"]!.string!,
       dict["GITHUB_CLIENT_SECRET"]!.string!,
@@ -14,9 +26,9 @@ private func config() -> (String, String, String) {
   }
   else {
     return (
-      NSProcessInfo.processInfo().environment["GITHUB_CLIENT_ID"]!,
-      NSProcessInfo.processInfo().environment["GITHUB_CLIENT_SECRET"]!,
-      NSProcessInfo.processInfo().environment["APP_ADMIN_PASSWORD"]!
+      ProcessInfo.processInfo.environment["GITHUB_CLIENT_ID"]!,
+      ProcessInfo.processInfo.environment["GITHUB_CLIENT_SECRET"]!,
+      ProcessInfo.processInfo.environment["APP_ADMIN_PASSWORD"]!
     )
   }
 }
