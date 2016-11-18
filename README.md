@@ -6,15 +6,13 @@ The app is written in Swift using the [Vapor](https://github.com/qutheory/vapor)
 
 # Prerequisites
 
-* Swift build 2016-05-31 [(.pkg download)](https://swift.org/builds/development/xcode/swift-DEVELOPMENT-SNAPSHOT-2016-05-31-a/swift-DEVELOPMENT-SNAPSHOT-2016-05-31-a-osx.pkg).
+* Swift 3 / Xcode 8.
 
 * The [Vapor CLI](https://vapor.readme.io/docs/install-cli).
 
 * A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL set to `/oauth/github` on your server.
 
 # Build
-
-Set the active Swift toolchain to the 2016-05-31 build. (If you have [swiftenv](https://github.com/kylef/swiftenv) installed, the .swift-version file will set it for you.)
 
 Run `vapor build` to install package dependencies and build the project.
 
@@ -23,7 +21,7 @@ Run `vapor build` to install package dependencies and build the project.
 Run `vapor xcode` to create the Xcode project. Edit the App scheme and add an argument to the Run action:
 
 ```
-  --workDir=$(SRCROOT)
+  --workdir=$(SRCROOT)
 ``` 
 
 Create the file `debug.json` in your checkout directory:
@@ -44,7 +42,7 @@ Copy the `Resource` and `Public` directories to the same directory on the server
 
 Define environment variables for `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and `APP_ADMIN_PASSWORD`.
 
-Run `./App --workDir=<your directory> --port=<your port>`.
+Run `./App --workdir=<your directory> --port=<your port>`.
 
 # Sample launchctl File
 
@@ -69,7 +67,7 @@ Replace `???` as appropriate.
 	<key>ProgramArguments</key>
 	<array>
 		<string>???/App</string>
-		<string>--workDir=???</string>
+		<string>--workdir=???</string>
 		<string>--port=???</string>
 	</array>
 	<key>RunAtLoad</key>
