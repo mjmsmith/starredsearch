@@ -8,7 +8,7 @@ The app is written in Swift using the [Vapor](https://github.com/qutheory/vapor)
 
 * Swift 3 / Xcode 8.
 
-* The [Vapor CLI](https://vapor.readme.io/docs/install-cli).
+* The [Vapor CLI](https://github.com/vapor/toolbox).
 
 * A [GitHub OAuth application](https://github.com/settings/developers) with the callback URL set to `/oauth/github` on your server.
 
