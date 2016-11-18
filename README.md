@@ -1,6 +1,6 @@
 # Overview
 
-**Starred Seach** is a tool to search the readme files in GitHub users' starred repositories. It lives at [starredsearch.com](http://starredsearch.com).
+**Starred Search** is a tool to search the readme files in GitHub users' starred repositories. It lives at [starredsearch.com](http://starredsearch.com).
 
 The app is written in Swift using the [Vapor](https://github.com/qutheory/vapor) web framework.
 
