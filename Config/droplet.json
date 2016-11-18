@@ -1,0 +1,20 @@
+{
+  "server": "engine",
+  "client": "engine",
+  "console": "terminal",
+  "log": "console",
+  "hash": "crypto",
+  "cipher": "crypto",
+  "middleware": {
+    "server": [
+      "file",
+      "abort",
+      "validation",
+      "type-safe",
+      "date",
+      "sessions"
+    ],
+    "client": [
+    ]
+  }
+}
