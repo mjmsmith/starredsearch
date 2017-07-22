@@ -2,22 +2,9 @@ import Foundation
 import Vapor
 
 private func config() -> (String, String, String) {
-  let workdir: String? = {
-    for arg in CommandLine.arguments {
-      let components = arg.components(separatedBy: "=")
-      
-      if components.count == 2 && components[0] == "--workdir" {
-        return components[1]
-      }
-    }
-    
-    return nil
-  }()
-  
-  if let workdir = workdir,
-     let data = try? Data(contentsOf: URL(fileURLWithPath: "\(workdir)/debug.json")),
+  if let data = try? Data(contentsOf: URL(fileURLWithPath: "\(app.droplet.config.workDir)/debug.json")),
      let json = try? JSON(bytes: data.withUnsafeBytes { [UInt8](UnsafeBufferPointer(start: $0, count: data.count)) }),
-     let dict = json.node.nodeObject {
+     let dict = json.object {
     return (
       dict["GITHUB_CLIENT_ID"]!.string!,
       dict["GITHUB_CLIENT_SECRET"]!.string!,
@@ -33,6 +20,7 @@ private func config() -> (String, String, String) {
   }
 }
 
+let app = try App()
 let (GitHubClientID, GitHubClientSecret, AppAdminPassword) = config()
 
-App().startServer()
+try app.startServer()
