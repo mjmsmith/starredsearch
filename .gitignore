@@ -1,4 +1,4 @@
 /.build/
-/Packages/
 /debug.*
+/VaporApp.xcodeproj/
 xcuserdata

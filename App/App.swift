@@ -1,6 +1,7 @@
 import Foundation
 import Dispatch
 import HTTP
+import LeafProvider
 import Vapor
 
 private let PurgeInterval = TimeInterval(60*60)
@@ -8,21 +9,27 @@ private let UserTimeoutInterval = TimeInterval(60*60*4)
 private let MinQueryLength = 3
 
 class App {
-  private let droplet = Droplet()
+  public let droplet: Droplet
   private let shortDateFormatter = DateFormatter()
   private var purgeTimeStamp = Date()
 
-  private var _usersBySessionIdentifier = [String: User]()
+  private var usersBySessionIdentifier = [String: User]()
   private let usersQueue = DispatchQueue(label: "usersQueue")
   
-  init() {
+  init() throws {
     self.shortDateFormatter.dateStyle = .short
-    
-    setupRoutes()
+
+    let config = try Config()
+
+    try config.addProvider(LeafProvider.Provider.self)
+
+    self.droplet = try Droplet(config: config)
+
+    self.setupRoutes()
   }
   
-  func startServer() {
-    self.droplet.run()
+  func startServer() throws {
+    try self.droplet.run()
   }
   
   private func setupRoutes() {
@@ -37,14 +44,14 @@ class App {
         }
       }
       
-      try request.session().data["timeStamp"] = Node(String(Date().timeIntervalSinceReferenceDate))
+      request.session?.data["timeStamp"] = Node(String(Date().timeIntervalSinceReferenceDate))
       
       return try self.droplet.view.make("index",
                                         ["url": Node("https://github.com/login/oauth/authorize?client_id=\(GitHubClientID)")])
     }
     
     self.droplet.get("oauth", "github") { request in
-      guard let sessionIdentifier = try request.session().identifier,
+      guard let sessionIdentifier = request.session?.identifier,
             let code = request.data["code"]?.string
       else {
         return Response(redirect: "/")
@@ -87,7 +94,7 @@ class App {
       }()
       
       if user.reposState == .fetched {
-        dict["nextUrl"] = Node(try request.session().data["nextUrl"] ?? "/search")
+        dict["nextUrl"] = Node(request.session?.data["nextUrl"] ?? "/search")
       }
       
       return try JSON(node: dict)
@@ -101,7 +108,7 @@ class App {
         urlComponents.query = request.uri.query
         
         if let url = urlComponents.url {
-          try request.session().data["nextUrl"] = Node(url.absoluteString)
+          request.session?.data["nextUrl"] = Node(url.absoluteString)
         }
         
         return Response(redirect: "/")
@@ -173,7 +180,7 @@ class App {
       var users = [User]()
       var usersByRepo = [Repo: [User]]()
       
-      self.usersQueue.sync() { users = Array(self._usersBySessionIdentifier.values) }
+      self.usersQueue.sync() { users = Array(self.usersBySessionIdentifier.values) }
 
       for user in users {
         for repo in user.repos {
@@ -242,20 +249,19 @@ class App {
   private func userForSessionIdentifier(_ sessionIdentifier: String) -> User? {
     var user: User?
     
-    self.usersQueue.sync() { user = self._usersBySessionIdentifier[sessionIdentifier]}
+    self.usersQueue.sync() { user = self.usersBySessionIdentifier[sessionIdentifier]}
     
     return user
   }
   
   private func setUser(_ user: User, forSessionIdentifier sessionIdentifier: String) {
-    self.usersQueue.sync(flags: .barrier) { self._usersBySessionIdentifier[sessionIdentifier] = user }
+    self.usersQueue.sync(flags: .barrier) { self.usersBySessionIdentifier[sessionIdentifier] = user }
   }
 
   private func userForRequest(_ request: Request) -> User? {
     self.purgeUsersAndRepos()
     
-    guard let session = try? request.session(),
-          let sessionIdentifier = session.identifier,
+    guard let sessionIdentifier = request.session?.identifier,
           let user = self.userForSessionIdentifier(sessionIdentifier)
     else {
       return nil
@@ -275,7 +281,7 @@ class App {
       return
     }
 
-    // With exclusive access, make sure another thread didn't get in before us
+    // With exclusive access, make sure another thread didn't get in before us,
     // and update the purge timestamp so nobody tries to get in after us.
     
     self.usersQueue.sync(flags: .barrier) {
@@ -285,9 +291,9 @@ class App {
 
       self.purgeTimeStamp = now
     
-      self._usersBySessionIdentifier
+      self.usersBySessionIdentifier
           .filter { _, user in return now.timeIntervalSince(user.timeStamp as Date) > UserTimeoutInterval }
-          .forEach { sessionIdentifier, _ in self._usersBySessionIdentifier.removeValue(forKey: sessionIdentifier) }
+          .forEach { sessionIdentifier, _ in self.usersBySessionIdentifier.removeValue(forKey: sessionIdentifier) }
 
       User.purgeRepos()
     }

@@ -153,10 +153,8 @@ class User {
     let operation = BlockOperation(block: {
       let (data, _, _) = URLSession.shared.synchronousDataTask(with: URL(string: "https://api.github.com/user")!,
                                                                headers: self.authorizedRequestHeaders())
-      
       if let data = data,
-         let bytes = try? data.makeBytes(),
-         let json = try? JSON(bytes: bytes),
+         let json = try? JSON(bytes: data.makeBytes()),
          let dict = json.object {
         username = dict["login"]?.string
       }
@@ -189,10 +187,9 @@ class User {
                                                                  headers: self.authorizedRequestHeaders(with: ["Accept": "application/vnd.github.star+json"]))
         
         if let data = data,
-           let bytes = try? data.makeBytes(),
-           let json = try? JSON(bytes: bytes),
-           let array: [Node] = json.node.nodeArray {
-          dicts += array.flatMap { $0.nodeObject }
+           let json = try? JSON(bytes: data.makeBytes()),
+           let array = Node(json).array {
+          dicts += array.flatMap { $0.object }
 
           if array.count < perPage || dicts.count >= MaxRepoCount {
             perPage = 0
@@ -221,10 +218,10 @@ class User {
     var newRepos = [Repo]()
     
     for dict in dicts {
-      if let repoDict: [String: Node] = dict["repo"]?.nodeObject,
+      if let repoDict: [String: Node] = dict["repo"]?.object,
          let id = repoDict["id"]?.int,
          let name = repoDict["name"]?.string,
-         let ownerDict: [String: Node] = repoDict["owner"]?.nodeObject,
+         let ownerDict: [String: Node] = repoDict["owner"]?.object,
          let ownerId = ownerDict["id"]?.int,
          let ownerName = ownerDict["login"]?.string,
          let forksCount = repoDict["forks"]?.int,

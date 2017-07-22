@@ -1,7 +1,0 @@
-{
-	"default": {
-		"port": "4009",
-		"host": "127.0.0.1",
-		"securityLayer": "none"
-	}
-}
