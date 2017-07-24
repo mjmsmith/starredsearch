@@ -106,7 +106,7 @@
     {
       "package": "Vapor",
       "reason": null,
-      "repositoryURL": "https://github.com/qutheory/vapor.git",
+      "repositoryURL": "https://github.com/vapor/vapor.git",
       "version": "2.1.2"
     }
   ],
